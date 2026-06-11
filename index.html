@@ -18,7 +18,11 @@
   <!-- Preloader -->
   <div class="preloader" id="preloader" aria-hidden="true">
     <div class="preloader-inner">
-      <img class="preloader-mark" src="assets/logos/logo-white.svg" alt="" width="180" height="41" />
+      <div class="preloader-spinner">
+        <span class="spinner-ring"></span>
+        <span class="spinner-ring spinner-ring-inner"></span>
+        <span class="spinner-core"></span>
+      </div>
       <div class="preloader-count"><span id="preCount">0</span>%</div>
     </div>
   </div>
@@ -78,9 +82,7 @@
             <a href="#why" class="btn btn-ghost" data-magnetic>Explore the platform</a>
           </div>
           <div class="hero-badges" id="heroBadges">
-            <span class="pill pill-outline">Live preview available</span>
-            <span class="pill pill-soft">Ready Q3 2026</span>
-            <span class="powered">Powered by <strong>eUnite</strong></span>
+            <span class="powered">Powered by <strong>eUnite HCM</strong></span>
           </div>
         </div>
 
@@ -114,15 +116,6 @@
             <p class="eyebrow" data-reveal><span class="eyebrow-line"></span>Why AmpyPay</p>
             <h2 class="h2 split" data-split>Built for payroll — not adapted to it</h2>
             <p class="lead" data-reveal>A next-generation payroll operations platform engineered from the ground up for payroll execution. AmpyPay unifies AI-assisted validation, operational governance, and real-time compliance into one experience.</p>
-            <div class="stat-block" data-reveal>
-              <div class="stat-number"><span data-count="70">0</span>%</div>
-              <p class="stat-caption">Reduce payroll operation<br>effort by up to 70%</p>
-            </div>
-            <div class="why-shot" data-reveal>
-              <img src="assets/images/why-ampypay.png"
-                   alt="AmpyPay payroll preparation overview with blockers, warnings and anomalies surfaced in a checklist"
-                   width="1115" height="853" loading="lazy" />
-            </div>
           </div>
           <div class="why-right">
             <ul class="feature-list">
@@ -154,6 +147,11 @@
             </ul>
           </div>
         </div>
+        <div class="why-shot" data-reveal>
+          <img src="assets/images/why-ampypay.png"
+               alt="AmpyPay payroll preparation overview with blockers, warnings and anomalies surfaced in a checklist"
+               width="1115" height="853" loading="lazy" />
+        </div>
         <div class="built-for" data-reveal>
           <span class="built-for-label">Built for</span>
           <div class="built-for-chips">
@@ -175,50 +173,33 @@
             <h2 class="h2 h2-light split" data-split>Every payroll issue, visible before submission</h2>
             <p class="lead lead-light" data-reveal>AmpyPay continuously validates payroll data before submission — surfacing blockers, warnings, anomalies, and compliance gaps in real time.</p>
             <p class="exc-note" data-reveal>Designed to reduce payroll rework, submission delays, compliance risk, and downstream operational issues.</p>
-            <div class="exc-arrow" aria-hidden="true">→</div>
           </div>
 
-          <article class="exc-card exc-card--blockers">
-            <div class="exc-card-top">
-              <span class="exc-kicker"><span class="dot dot-red"></span>Must resolve</span>
-              <span class="exc-count">9</span>
-            </div>
-            <h3>Blockers</h3>
-            <p>Critical payroll issues that must be resolved before payroll can proceed.</p>
-            <ul class="exc-examples">
-              <li>Missing federal W-4</li>
-              <li>Negative net pay −$342.18</li>
-              <li>Missing bank account details</li>
-            </ul>
-          </article>
+          <div class="exc-cards">
+            <article class="exc-card exc-card--blockers">
+              <div class="exc-card-top">
+                <span class="exc-kicker"><span class="dot dot-red"></span>Must resolve</span>
+              </div>
+              <h3>Blockers</h3>
+              <p>Critical payroll issues that must be resolved before payroll can proceed.</p>
+            </article>
 
-          <article class="exc-card exc-card--warnings">
-            <div class="exc-card-top">
-              <span class="exc-kicker"><span class="dot dot-amber"></span>Review</span>
-              <span class="exc-count">32</span>
-            </div>
-            <h3>Warnings</h3>
-            <p>Operational and compliance-sensitive conditions that require review.</p>
-            <ul class="exc-examples">
-              <li>Garnishment order update</li>
-              <li>HSA contribution exceeds IRS limit</li>
-              <li>First payroll for new hire</li>
-            </ul>
-          </article>
+            <article class="exc-card exc-card--warnings">
+              <div class="exc-card-top">
+                <span class="exc-kicker"><span class="dot dot-amber"></span>Review</span>
+              </div>
+              <h3>Warnings</h3>
+              <p>Operational and compliance-sensitive conditions that require review.</p>
+            </article>
 
-          <article class="exc-card exc-card--anomalies">
-            <div class="exc-card-top">
-              <span class="exc-kicker"><span class="dot dot-purple"></span>AI-detected</span>
-              <span class="exc-count">8</span>
-            </div>
-            <h3>Anomalies</h3>
-            <p>AI-assisted detection of unusual payroll patterns and statistical outliers.</p>
-            <ul class="exc-examples">
-              <li>Net pay +18.4% vs prior period</li>
-              <li>Overtime exceeds 8 hrs/week</li>
-              <li>First overtime in 6 months</li>
-            </ul>
-          </article>
+            <article class="exc-card exc-card--anomalies">
+              <div class="exc-card-top">
+                <span class="exc-kicker"><span class="dot dot-purple"></span>AI-detected</span>
+              </div>
+              <h3>Anomalies</h3>
+              <p>AI-assisted detection of unusual payroll patterns and statistical outliers.</p>
+            </article>
+          </div>
 
           <div class="exc-visual">
             <img class="exc-shot-back" src="assets/images/exception02.png"
@@ -255,7 +236,7 @@
                   <span class="ring-num"><span data-count="90">0</span>%</span>
                 </div>
                 <div>
-                  <span class="conf-badge-label">Payroll Confidence <span class="ai-tag">AI</span></span>
+                  <span class="conf-badge-label">Payroll Confidence <span class="ai-tag"><span class="ai-tag-spark" aria-hidden="true">✦</span> AI</span></span>
                   <span class="conf-badge-sub">Needs review before submission</span>
                 </div>
               </div>
@@ -467,7 +448,7 @@
           <img class="brand-logo" src="assets/logos/logo-white.svg" alt="AmpyPay" width="180" height="41" />
         </a>
         <p class="footer-tag">We handle payroll. You handle growth.</p>
-        <p class="powered">Powered by <strong>eUnite</strong></p>
+        <p class="powered">Powered by <strong>eUnite HCM</strong></p>
       </div>
       <nav class="footer-links" aria-label="Footer">
         <a href="#why">Why AmpyPay</a>

@@ -130,7 +130,7 @@
       v: 100, duration: 1.1, ease: 'power2.inOut',
       onUpdate: () => { countEl.textContent = Math.round(count.v); },
     })
-      .from('.preloader-mark', { scale: 0.7, opacity: 0, duration: 0.7, ease: 'back.out(1.7)' }, 0);
+      .from('.preloader-spinner', { scale: 0.7, opacity: 0, duration: 0.7, ease: 'back.out(1.7)' }, 0);
   }
 
   /* ---------------- Counters ---------------- */
@@ -196,33 +196,7 @@
       });
     });
 
-    // Exceptions: pinned horizontal scroll on desktop only
     const mm = gsap.matchMedia();
-    mm.add('(min-width: 961px)', () => {
-      const excTrack = document.getElementById('excTrack');
-      const section = document.querySelector('.exceptions');
-      if (!excTrack || !section) return;
-      section.classList.add('is-horizontal');
-      const getDistance = () => excTrack.scrollWidth - window.innerWidth;
-      const tween = gsap.to(excTrack, {
-        x: () => -getDistance(),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.exceptions',
-          start: 'top top',
-          end: () => '+=' + getDistance(),
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-        },
-      });
-      return () => {
-        section.classList.remove('is-horizontal');
-        tween.scrollTrigger && tween.scrollTrigger.kill();
-        tween.kill();
-      };
-    });
 
     // Compliance collage: layered parallax (desktop overlap layout only)
     mm.add('(min-width: 961px)', () => {
