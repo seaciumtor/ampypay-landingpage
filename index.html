@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AmpyPay — Purpose-built for Global Payroll</title>
+  <meta name="description" content="AmpyPay is an AI-assisted enterprise payroll operations platform. We handle payroll. You handle growth." />
+  <meta property="og:title" content="AmpyPay — Purpose-built for Global Payroll" />
+  <meta property="og:description" content="AI-assisted payroll operations platform for modern enterprise workforce management." />
+  <link rel="icon" type="image/svg+xml" href="assets/logos/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <img class="preloader-mark" src="assets/logos/logo-white.svg" alt="" width="180" height="41" />
+      <div class="preloader-count"><span id="preCount">0</span>%</div>
+    </div>
+  </div>
+
+  <!-- Custom cursor (desktop only) -->
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand" aria-label="AmpyPay home">
+        <img class="brand-logo" src="assets/logos/logo-white.svg" alt="AmpyPay" width="180" height="41" />
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#why">Why AmpyPay</a>
+        <a href="#platform">Platform</a>
+        <a href="#confidence">Confidence Engine</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#security">Security</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="#cta" class="btn btn-primary btn-sm" data-magnetic>Get a demo</a>
+        <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav aria-label="Mobile">
+      <a href="#why">Why AmpyPay</a>
+      <a href="#platform">Platform</a>
+      <a href="#confidence">Confidence Engine</a>
+      <a href="#compliance">Compliance</a>
+      <a href="#security">Security</a>
+      <a href="#cta" class="mobile-cta">Get a demo</a>
+    </nav>
+    <p class="mobile-tag">We handle payroll. You handle growth.</p>
+  </div>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <p class="eyebrow hero-eyebrow"><span class="eyebrow-line"></span>Enterprise Payroll Operations Platform</p>
+          <h1 class="hero-title" id="heroTitle">Purpose-built for <span class="accent">Global&nbsp;Payroll</span></h1>
+          <p class="hero-sub" id="heroSub">AI-assisted payroll operations platform for modern enterprise workforce management.</p>
+          <div class="hero-ctas" id="heroCtas">
+            <a href="#cta" class="btn btn-primary" data-magnetic>Get a demo</a>
+            <a href="#why" class="btn btn-ghost" data-magnetic>Explore the platform</a>
+          </div>
+          <div class="hero-badges" id="heroBadges">
+            <span class="pill pill-outline">Live preview available</span>
+            <span class="pill pill-soft">Ready Q3 2026</span>
+            <span class="powered">Powered by <strong>eUnite</strong></span>
+          </div>
+        </div>
+
+        <div class="hero-visual" id="heroVisual">
+          <img class="hero-shot" id="mockPanel" src="assets/images/hero1.png"
+               alt="AmpyPay payroll operations dashboard on a tablet, showing the upcoming payroll run, confidence score and inbox"
+               width="3462" height="2644" fetchpriority="high" />
+          <div class="float-chip chip-blockers" aria-hidden="true">
+            <span class="dot dot-red"></span> 9 blockers · <em>must resolve</em>
+          </div>
+          <div class="float-chip chip-ai" aria-hidden="true">
+            <span class="spark">✦</span> AI insights · 8 anomalies flagged
+          </div>
+          <div class="float-chip chip-filed" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="chip-check" aria-hidden="true"><path d="M4 12l6 6L20 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Reports filed · run locked
+          </div>
+        </div>
+      </div>
+      <a class="scroll-hint" href="#why" aria-label="Scroll to content">
+        <span class="scroll-hint-track"><span class="scroll-hint-dot"></span></span>
+        <span class="scroll-hint-label">Scroll</span>
+      </a>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marqueeTrack">
+        <div class="marquee-set">
+          <span>We handle payroll.</span><span class="mq-alt">You handle growth.</span><span class="mq-mark">✓</span>
+          <span>We handle payroll.</span><span class="mq-alt">You handle growth.</span><span class="mq-mark">✓</span>
+          <span>We handle payroll.</span><span class="mq-alt">You handle growth.</span><span class="mq-mark">✓</span>
+        </div>
+        <div class="marquee-set">
+          <span>We handle payroll.</span><span class="mq-alt">You handle growth.</span><span class="mq-mark">✓</span>
+          <span>We handle payroll.</span><span class="mq-alt">You handle growth.</span><span class="mq-mark">✓</span>
+          <span>We handle payroll.</span><span class="mq-alt">You handle growth.</span><span class="mq-mark">✓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ WHY AMPYPAY ============ -->
+    <section class="why section-cream" id="why">
+      <div class="container">
+        <div class="why-grid">
+          <div class="why-left">
+            <p class="eyebrow" data-reveal><span class="eyebrow-line"></span>Why AmpyPay</p>
+            <h2 class="h2 split" data-split>Built for payroll — not adapted to it</h2>
+            <p class="lead" data-reveal>A next-generation payroll operations platform engineered from the ground up for payroll execution. AmpyPay unifies AI-assisted validation, operational governance, and real-time compliance into one experience.</p>
+            <div class="stat-block" data-reveal>
+              <div class="stat-number"><span data-count="70">0</span>%</div>
+              <p class="stat-caption">Reduce payroll operation<br>effort by up to 70%</p>
+            </div>
+            <div class="why-shot" data-reveal>
+              <img src="assets/images/why-ampypay.png"
+                   alt="AmpyPay payroll preparation overview with blockers, warnings and anomalies surfaced in a checklist"
+                   width="1115" height="853" loading="lazy" />
+            </div>
+          </div>
+          <div class="why-right">
+            <ul class="feature-list">
+              <li class="feature-row" data-reveal>
+                <span class="feature-num">01</span>
+                <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5L16 9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <p>Built specifically for payroll operations</p>
+              </li>
+              <li class="feature-row" data-reveal>
+                <span class="feature-num">02</span>
+                <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 13l9 5 9-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                <p>Designed for complex time &amp; payroll rules</p>
+              </li>
+              <li class="feature-row" data-reveal>
+                <span class="feature-num">03</span>
+                <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16z" fill="currentColor"/></svg>
+                <p>AI-assisted payroll validation</p>
+              </li>
+              <li class="feature-row" data-reveal>
+                <span class="feature-num">04</span>
+                <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 9h18M9 9v11" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                <p>Unified payroll governance framework</p>
+              </li>
+              <li class="feature-row" data-reveal>
+                <span class="feature-num">05</span>
+                <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M21 20H3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <p>Reduce payroll operation effort by up to <strong>70%</strong></p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="built-for" data-reveal>
+          <span class="built-for-label">Built for</span>
+          <div class="built-for-chips">
+            <span class="chip">Multi-country payroll operations</span>
+            <span class="chip">Compliance-sensitive organizations</span>
+            <span class="chip">Shared service payroll teams</span>
+            <span class="chip">High-volume processing</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXCEPTION-FIRST OPERATIONS ============ -->
+    <section class="exceptions section-navy" id="platform">
+      <div class="exc-pin">
+        <div class="exc-track" id="excTrack">
+          <div class="exc-intro">
+            <p class="eyebrow eyebrow-light" data-reveal><span class="eyebrow-line"></span>Exception-first Operations</p>
+            <h2 class="h2 h2-light split" data-split>Every payroll issue, visible before submission</h2>
+            <p class="lead lead-light" data-reveal>AmpyPay continuously validates payroll data before submission — surfacing blockers, warnings, anomalies, and compliance gaps in real time.</p>
+            <p class="exc-note" data-reveal>Designed to reduce payroll rework, submission delays, compliance risk, and downstream operational issues.</p>
+            <div class="exc-arrow" aria-hidden="true">→</div>
+          </div>
+
+          <article class="exc-card exc-card--blockers">
+            <div class="exc-card-top">
+              <span class="exc-kicker"><span class="dot dot-red"></span>Must resolve</span>
+              <span class="exc-count">9</span>
+            </div>
+            <h3>Blockers</h3>
+            <p>Critical payroll issues that must be resolved before payroll can proceed.</p>
+            <ul class="exc-examples">
+              <li>Missing federal W-4</li>
+              <li>Negative net pay −$342.18</li>
+              <li>Missing bank account details</li>
+            </ul>
+          </article>
+
+          <article class="exc-card exc-card--warnings">
+            <div class="exc-card-top">
+              <span class="exc-kicker"><span class="dot dot-amber"></span>Review</span>
+              <span class="exc-count">32</span>
+            </div>
+            <h3>Warnings</h3>
+            <p>Operational and compliance-sensitive conditions that require review.</p>
+            <ul class="exc-examples">
+              <li>Garnishment order update</li>
+              <li>HSA contribution exceeds IRS limit</li>
+              <li>First payroll for new hire</li>
+            </ul>
+          </article>
+
+          <article class="exc-card exc-card--anomalies">
+            <div class="exc-card-top">
+              <span class="exc-kicker"><span class="dot dot-purple"></span>AI-detected</span>
+              <span class="exc-count">8</span>
+            </div>
+            <h3>Anomalies</h3>
+            <p>AI-assisted detection of unusual payroll patterns and statistical outliers.</p>
+            <ul class="exc-examples">
+              <li>Net pay +18.4% vs prior period</li>
+              <li>Overtime exceeds 8 hrs/week</li>
+              <li>First overtime in 6 months</li>
+            </ul>
+          </article>
+
+          <div class="exc-visual">
+            <img class="exc-shot-back" src="assets/images/exception02.png"
+                 alt="AmpyPay payroll sheet with per-employee hours, gross and net pay"
+                 width="664" height="510" loading="lazy" />
+            <img class="exc-shot-front" src="assets/images/exception01.png"
+                 alt="AmpyPay exceptions inbox listing blockers, warnings and AI-detected anomalies"
+                 width="683" height="754" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONFIDENCE ENGINE ============ -->
+    <section class="confidence section-cream" id="confidence">
+      <div class="container">
+        <div class="conf-head">
+          <p class="eyebrow" data-reveal><span class="eyebrow-line"></span>Payroll Confidence Engine</p>
+          <h2 class="h2 split" data-split>Know your payroll is ready — before you submit</h2>
+          <p class="lead" data-reveal>The AmpyPay Payroll Confidence Engine gives payroll teams an instant operational health assessment ahead of every submission.</p>
+        </div>
+        <div class="conf-grid">
+          <div class="conf-visual" data-reveal>
+            <div class="conf-shot-wrap">
+              <img class="conf-shot" src="assets/images/payroll-confidence-score.png"
+                   alt="AmpyPay submission screen showing a 90% payroll confidence score with open blockers and warnings"
+                   width="1171" height="871" loading="lazy" />
+              <div class="conf-badge" aria-hidden="true">
+                <div class="ring ring-sm">
+                  <svg viewBox="0 0 96 96">
+                    <circle class="ring-bg" cx="48" cy="48" r="40"/>
+                    <circle class="ring-val" cx="48" cy="48" r="40" data-ring="0.9"/>
+                  </svg>
+                  <span class="ring-num"><span data-count="90">0</span>%</span>
+                </div>
+                <div>
+                  <span class="conf-badge-label">Payroll Confidence <span class="ai-tag">AI</span></span>
+                  <span class="conf-badge-sub">Needs review before submission</span>
+                </div>
+              </div>
+            </div>
+            <p class="conf-visual-note">A single, honest read on payroll run health — recalculated continuously as issues are resolved.</p>
+          </div>
+          <div class="conf-cards">
+            <article class="conf-card" data-reveal>
+              <svg class="conf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              <h3>AI-powered validation</h3>
+              <p>Automated checks across the full payroll run.</p>
+            </article>
+            <article class="conf-card" data-reveal>
+              <svg class="conf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <h3>Confidence scoring</h3>
+              <p>A single, honest read on payroll run health.</p>
+            </article>
+            <article class="conf-card" data-reveal>
+              <svg class="conf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <h3>Filing readiness controls</h3>
+              <p>Lock the run and generate official records in one step.</p>
+            </article>
+            <article class="conf-card" data-reveal>
+              <svg class="conf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <h3>Audit-ready workflow</h3>
+              <p>Every step traceable, reviewable, and authorized.</p>
+            </article>
+          </div>
+        </div>
+        <p class="section-footnote" data-reveal>Built to reduce payroll uncertainty, improve operational confidence, and create a more predictable payroll process.</p>
+      </div>
+    </section>
+
+    <!-- ============ COMPLIANCE ============ -->
+    <section class="compliance section-navy-soft" id="compliance">
+      <div class="container">
+        <div class="comp-head">
+          <p class="eyebrow eyebrow-light" data-reveal><span class="eyebrow-line"></span>Compliance Infrastructure</p>
+          <h2 class="h2 h2-light split" data-split>Global compliance, built into every workflow</h2>
+          <p class="lead lead-light" data-reveal>AmpyPay embeds compliance directly into payroll operations — from onboarding and tax forms to approvals, auditability, and governance.</p>
+        </div>
+        <div class="comp-grid">
+          <ul class="comp-list">
+            <li class="comp-row" data-reveal>
+              <span class="comp-num">01</span>
+              <div>
+                <h3>Full audit trail</h3>
+                <p>Every compliance-sensitive action across the company — filterable and exportable.</p>
+              </div>
+            </li>
+            <li class="comp-row" data-reveal>
+              <span class="comp-num">02</span>
+              <div>
+                <h3>Electronic signature records</h3>
+                <p>Signed, time-stamped receipts for every submitted form and approval.</p>
+              </div>
+            </li>
+            <li class="comp-row" data-reveal>
+              <span class="comp-num">03</span>
+              <div>
+                <h3>Dynamic tax onboarding</h3>
+                <p>Guided federal and state tax forms that adapt to each employee.</p>
+              </div>
+            </li>
+            <li class="comp-row" data-reveal>
+              <span class="comp-num">04</span>
+              <div>
+                <h3>Role-based governance</h3>
+                <p>Granular roles and permissions for every payroll-sensitive action.</p>
+              </div>
+            </li>
+            <li class="comp-row" data-reveal>
+              <span class="comp-num">05</span>
+              <div>
+                <h3>Exportable compliance records</h3>
+                <p>Audit-ready records, exportable on demand for regulators and reviews.</p>
+              </div>
+            </li>
+          </ul>
+          <div class="comp-visuals" data-reveal>
+            <img class="comp-shot comp-shot--audit" src="assets/images/compliance02.png"
+                 alt="AmpyPay audit log of compliance-sensitive actions with viewable receipts"
+                 width="755" height="610" loading="lazy" />
+            <img class="comp-shot comp-shot--tax" src="assets/images/compliance-01.png"
+                 alt="AmpyPay dynamic Federal W-4 tax onboarding form"
+                 width="661" height="544" loading="lazy" />
+            <img class="comp-shot comp-shot--receipt" src="assets/images/compliance03.png"
+                 alt="Signed, time-stamped receipt for a submitted state tax form with electronic signature"
+                 width="474" height="483" loading="lazy" />
+          </div>
+        </div>
+        <p class="section-footnote footnote-light" data-reveal>Designed to support enterprise-grade governance, operational accountability, and compliance readiness across global payroll environments.</p>
+      </div>
+    </section>
+
+    <!-- ============ SECURITY & INFRASTRUCTURE ============ -->
+    <section class="security section-navy" id="security">
+      <div class="container">
+        <div class="sec-head">
+          <p class="eyebrow eyebrow-light" data-reveal><span class="eyebrow-line"></span>Security &amp; Infrastructure</p>
+          <h2 class="h2 h2-light split" data-split>Enterprise-grade security &amp; infrastructure</h2>
+          <p class="lead lead-light" data-reveal>AmpyPay runs on enterprise-grade cloud infrastructure built for security, operational reliability, regional deployment flexibility, and compliance-sensitive payroll operations.</p>
+        </div>
+
+        <div class="sec-globe-grid">
+          <div class="globe-wrap" data-reveal>
+            <canvas id="globe-canvas" aria-hidden="true"></canvas>
+          </div>
+          <div class="sec-regions">
+            <h3 class="sec-sub" data-reveal>Global deployment regions</h3>
+            <ul class="region-list">
+              <li data-reveal><span class="region-pulse"></span><div><strong>AWS France Region</strong><span>GDPR-aligned EU processing</span></div></li>
+              <li data-reveal><span class="region-pulse"></span><div><strong>AWS Singapore Region</strong><span>APAC processing hub</span></div></li>
+              <li data-reveal><span class="region-pulse"></span><div><strong>US Data Center</strong><span>DATABANK</span></div></li>
+              <li data-reveal><span class="region-pulse"></span><div><strong>INET Thailand</strong><span>Regional data residency</span></div></li>
+              <li data-reveal><span class="region-pulse"></span><div><strong>eUnite Data Center</strong><span>Dedicated infrastructure</span></div></li>
+            </ul>
+            <div class="arch-summary" data-reveal>
+              <h4>Key architecture summary</h4>
+              <ul>
+                <li>Regional data residency controls</li>
+                <li>GDPR-aligned EU processing</li>
+                <li>Segmented infrastructure architecture</li>
+                <li>Cross-region synchronization controls</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec-stats">
+          <div class="sec-stat" data-reveal>
+            <span class="sec-stat-num"><span data-count="99.5" data-decimals="1">0</span>%</span>
+            <span class="sec-stat-label">Service uptime commitment</span>
+          </div>
+          <div class="sec-stat" data-reveal>
+            <span class="sec-stat-num">Active-Active</span>
+            <span class="sec-stat-label">High availability architecture</span>
+          </div>
+          <div class="sec-stat" data-reveal>
+            <span class="sec-stat-num">BCP / DR</span>
+            <span class="sec-stat-label">Business continuity &amp; disaster recovery, with defined RTO &amp; RPO</span>
+          </div>
+          <div class="sec-stat" data-reveal>
+            <span class="sec-stat-num">24 / 7</span>
+            <span class="sec-stat-label">Automated data backup &amp; integrity protection</span>
+          </div>
+        </div>
+
+        <div class="sec-certs" data-reveal>
+          <span class="sec-certs-label">Security compliance</span>
+          <div class="cert-chips">
+            <span class="cert">ISO 27001</span>
+            <span class="cert">ISO 27701</span>
+            <span class="cert">ISO 29110</span>
+            <span class="cert">SOC 2 Type 2 <em>end of Q3/2026</em></span>
+          </div>
+        </div>
+
+        <div class="sec-controls" data-reveal>
+          <span class="sec-certs-label">Security control</span>
+          <div class="control-chips">
+            <span>Virtual Private Cloud (VPC)</span>
+            <span>AWS Security Groups</span>
+            <span>Access Control Lists (ACLs)</span>
+            <span>AWS Secure Access Points</span>
+            <span>Trend Micro Cloud One</span>
+            <span>AWS CloudWatch</span>
+            <span>AWS WAF</span>
+            <span>AWS Route 53</span>
+          </div>
+        </div>
+
+        <div class="sec-partners" data-reveal>
+          <span class="sec-certs-label">Infrastructure partners</span>
+          <div class="partner-row"><span>AWS</span><span>INET</span><span>DATABANK</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA / ROAD AHEAD ============ -->
+    <section class="cta" id="cta">
+      <div class="cta-glow" aria-hidden="true"></div>
+      <div class="container cta-inner">
+        <p class="eyebrow eyebrow-light" data-reveal><span class="eyebrow-line"></span>The Road Ahead</p>
+        <h2 class="cta-title split" data-split>The future of payroll operations</h2>
+        <p class="cta-strong" data-reveal>Built for complexity. Designed for confidence.</p>
+        <p class="lead lead-light cta-lead" data-reveal>AmpyPay combines payroll operations, compliance governance, AI-assisted validation, and enterprise scalability into a single modern payroll platform.</p>
+        <div class="hero-ctas cta-ctas" data-reveal>
+          <a href="#top" class="btn btn-primary btn-lg" data-magnetic>Get a demo</a>
+        </div>
+        <div class="hero-badges cta-badges" data-reveal>
+          <span class="pill pill-outline">Live preview available</span>
+          <span class="pill pill-soft">Ready Q3 2026</span>
+        </div>
+        <div class="cta-shot" data-reveal>
+          <img src="assets/images/hero2.png"
+               alt="AmpyPay payroll submission screen on a laptop — file reports, review and authorize the run"
+               width="2238" height="1353" loading="lazy" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand" aria-label="AmpyPay home">
+          <img class="brand-logo" src="assets/logos/logo-white.svg" alt="AmpyPay" width="180" height="41" />
+        </a>
+        <p class="footer-tag">We handle payroll. You handle growth.</p>
+        <p class="powered">Powered by <strong>eUnite</strong></p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#why">Why AmpyPay</a>
+        <a href="#platform">Platform</a>
+        <a href="#confidence">Confidence Engine</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#security">Security</a>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <p class="footer-disclaimer">Features, screenshots, and timelines shown are illustrative, reflect AmpyPay's current product direction as of the publication date, are subject to change without notice, and do not constitute a commitment, warranty, or contractual obligation.</p>
+      <p class="footer-copy">© 2026 AmpyPay. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
