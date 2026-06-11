@@ -462,24 +462,68 @@
         );
       }
 
-      // Dotted sphere (fibonacci distribution)
-      const DOTS = 2400;
-      const dotPos = new Float32Array(DOTS * 3);
+      // Land mask: rasterise bundled Natural Earth polygons (js/world-land.js)
+      // onto an offscreen equirectangular canvas, then sample per dot.
+      function buildLandTest() {
+        if (!window.WORLD_LAND) return null;
+        const W = 1024, H = 512;
+        const cv = document.createElement('canvas');
+        cv.width = W; cv.height = H;
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#fff';
+        window.WORLD_LAND.forEach((rings) => {
+          ctx.beginPath();
+          rings.forEach((ring) => {
+            ring.forEach(([lon, lat], i) => {
+              const x = ((lon + 180) / 360) * W;
+              const y = ((90 - lat) / 180) * H;
+              i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+            });
+            ctx.closePath();
+          });
+          ctx.fill('evenodd');
+        });
+        const px = ctx.getImageData(0, 0, W, H).data;
+        return (lat, lon) => {
+          const x = Math.min(W - 1, Math.max(0, Math.round(((lon + 180) / 360) * W)));
+          const y = Math.min(H - 1, Math.max(0, Math.round(((90 - lat) / 180) * H)));
+          return px[(y * W + x) * 4 + 3] > 0;
+        };
+      }
+      const isLand = buildLandTest();
+
+      // Dotted sphere (fibonacci distribution) — bright dots on land
+      // (continents), faint sparse dots on ocean to keep the silhouette.
+      const DOTS = isLand ? 14000 : 2400;
+      const landPts = [], oceanPts = [];
       const golden = Math.PI * (3 - Math.sqrt(5));
       for (let d = 0; d < DOTS; d++) {
         const y = 1 - (d / (DOTS - 1)) * 2;
         const rad = Math.sqrt(1 - y * y);
         const th = golden * d;
-        dotPos[d * 3] = Math.cos(th) * rad * R;
-        dotPos[d * 3 + 1] = y * R;
-        dotPos[d * 3 + 2] = Math.sin(th) * rad * R;
+        const px = Math.cos(th) * rad * R;
+        const py = y * R;
+        const pz = Math.sin(th) * rad * R;
+        if (isLand) {
+          // Invert latLon(): x = -sinφcosθ, z = sinφsinθ, θ = lon + 180
+          const lat = 90 - Math.acos(py / R) * (180 / Math.PI);
+          const lon = ((Math.atan2(pz, -px) * (180 / Math.PI) - 180) + 540) % 360 - 180;
+          if (isLand(lat, lon)) { landPts.push(px, py, pz); continue; }
+          if (d % 7 === 0) oceanPts.push(px, py, pz);
+        } else {
+          landPts.push(px, py, pz);
+        }
       }
-      const dotGeo = new THREE.BufferGeometry();
-      dotGeo.setAttribute('position', new THREE.BufferAttribute(dotPos, 3));
-      globe.add(new THREE.Points(dotGeo, new THREE.PointsMaterial({
-        color: 0x3b74f0, size: 0.03, transparent: true, opacity: 0.6,
-        depthWrite: false,
-      })));
+      function addDots(pts, color, size, opacity) {
+        if (!pts.length) return;
+        const g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
+        globe.add(new THREE.Points(g, new THREE.PointsMaterial({
+          color, size, transparent: true, opacity, depthWrite: false,
+        })));
+      }
+      addDots(landPts, 0x5d8bf4, 0.032, 0.85);
+      addDots(oceanPts, 0x3b74f0, 0.022, 0.18);
 
       // Data-center markers: US (Dallas), France (Paris), Thailand (Bangkok), Singapore
       const sites = [
