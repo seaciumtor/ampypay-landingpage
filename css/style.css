@@ -358,27 +358,8 @@ body::after {
 @keyframes scrollDot { 0%, 100% { transform: translateY(0); opacity: 1; } 60% { transform: translateY(12px); opacity: 0.2; } }
 .scroll-hint-label { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(251, 251, 238, 0.55); }
 
-/* ============ Marquee ============ */
-.marquee {
-  background: var(--blue);
-  padding: 26px 0;
-  overflow: hidden;
-  position: relative; z-index: 3;
-}
-.marquee-track { display: flex; width: max-content; will-change: transform; }
-.marquee-set { display: flex; align-items: center; flex: none; }
-.marquee-set span {
-  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
-  font-weight: 800; letter-spacing: -0.02em;
-  color: #fff;
-  padding-right: 40px;
-  white-space: nowrap;
-}
-.marquee-set .mq-alt { color: var(--navy); }
-.marquee-set .mq-mark { color: rgba(255, 255, 255, 0.55); }
-
 /* ============ Sections base ============ */
-.section-cream { background: var(--cream); color: var(--navy); }
+.section-cream { background: #ffffff; color: var(--navy); }
 .section-navy { background: var(--navy); }
 .section-navy-soft { background: var(--navy-deep); }
 
@@ -875,7 +856,6 @@ body::after {
   .hero-title { font-size: clamp(1.9rem, 11.5vw, 2.7rem); }
   .h2 { font-size: clamp(1.6rem, 9.5vw, 2.1rem); }
   .cta-title { font-size: clamp(1.8rem, 11vw, 2.6rem); }
-  .marquee-set span { font-size: 1.2rem; }
   .conf-visual { padding: 44px 16px; }
   .conf-cards { grid-template-columns: 1fr; }
 }

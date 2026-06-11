@@ -196,12 +196,6 @@
       });
     });
 
-    // Marquee: seamless loop (track holds two identical sets)
-    const track = document.getElementById('marqueeTrack');
-    if (track) {
-      gsap.to(track, { xPercent: -50, ease: 'none', duration: 22, repeat: -1 });
-    }
-
     // Exceptions: pinned horizontal scroll on desktop only
     const mm = gsap.matchMedia();
     mm.add('(min-width: 961px)', () => {
