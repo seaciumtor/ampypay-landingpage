@@ -396,7 +396,7 @@ body::after {
 .scroll-hint-label { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(251, 251, 238, 0.55); }
 
 /* ============ Sections base ============ */
-.section-cream { background: #ffffff; color: var(--navy); }
+.section-cream { background: #f7f9fa; color: var(--navy); }
 .section-navy { background: var(--navy); }
 .section-navy-soft { background: var(--navy-deep); }
 
