@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ampypay-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ALLOWED_ORIGIN
+        value: https://seaciumtor.github.io
+      - key: NODE_ENV
+        value: production

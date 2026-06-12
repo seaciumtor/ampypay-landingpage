@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — AmpyPay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0A1F44;
+      --navy-deep: #071737;
+      --navy-mid:  #0D2550;
+      --blue:      #2563EA;
+      --blue-hov:  #1d4ed8;
+      --cream:     #FBFBEE;
+      --muted:     rgba(251,251,238,0.5);
+      --border:    rgba(255,255,255,0.09);
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--navy-deep);
+      color: var(--cream);
+    }
+
+    /* subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(37,99,234,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37,99,234,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(7,23,55,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+    .logo-icon { width: 32px; height: 32px; flex-shrink: 0; }
+    .logo-text { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: var(--cream); }
+    .logo-text span { color: var(--blue); }
+
+    .header-right { display: flex; align-items: center; gap: 16px; }
+
+    .header-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.18s, color 0.18s, background 0.18s;
+    }
+    .btn-logout:hover {
+      border-color: rgba(239,68,68,0.4);
+      color: #fca5a5;
+      background: rgba(239,68,68,0.07);
+    }
+
+    /* ── Main ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 24px 64px;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 24px;
+      min-width: 150px;
+    }
+    .stat-val {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      max-width: 340px;
+      padding: 9px 13px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--cream);
+      font-family: inherit;
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    .search::placeholder { color: rgba(251,251,238,0.28); }
+    .search:focus { border-color: rgba(37,99,234,0.55); }
+
+    .row-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+    /* ── Table ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    th {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 11px 16px;
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 13px 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    tr:hover td { background: rgba(255,255,255,0.025); }
+
+    .id-cell { color: rgba(251,251,238,0.25); font-size: 12px; }
+    .name-cell { font-weight: 600; }
+    .email-cell a { color: #60a5fa; text-decoration: none; }
+    .email-cell a:hover { text-decoration: underline; }
+    .phone-cell { color: var(--muted); }
+    .date-cell { color: rgba(251,251,238,0.45); font-size: 12.5px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: rgba(37,99,234,0.18);
+      color: #93c5fd;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 56px 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 56px 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a class="logo" href="/ap-control">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 3L5 9.5V20c0 7.18 6.4 13.88 15 16 8.6-2.12 15-8.82 15-16V9.5L20 3Z" fill="#2563EA" fill-opacity="0.15" stroke="#2563EA" stroke-width="1.5"/>
+        <path d="M22 10l-6 11h5l-3 9 8-13h-5l4-7h-3Z" fill="#2563EA"/>
+      </svg>
+      <span class="logo-text">Ampy<span>Pay</span></span>
+    </a>
+
+    <div class="header-right">
+      <span class="header-label">Admin Dashboard</span>
+      <a class="btn-logout" href="/ap-control/logout" title="Sign out">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sign out
+      </a>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <h1 class="page-title">Demo Requests</h1>
+    <p class="page-sub">People who filled in the "Get a demo" form on the landing page</p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-val" id="totalCount">—</div>
+        <div class="stat-label">Total requests</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="todayCount">—</div>
+        <div class="stat-label">Today</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" class="search" id="search" placeholder="Search name, company or email…" />
+      <span class="row-count" id="rowCount"></span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Submitted (ICT)</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="6" class="loading">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    let allRows = [];
+
+    async function loadData() {
+      try {
+        const res = await fetch('/api/demos', { credentials: 'include' });
+        if (res.status === 302 || res.redirected) {
+          location.href = '/ap-control/login';
+          return;
+        }
+        allRows = await res.json();
+        render(allRows);
+      } catch {
+        document.getElementById('tbody').innerHTML = '<tr><td colspan="6" class="empty">Could not load data.</td></tr>';
+      }
+    }
+
+    document.getElementById('search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      render(allRows.filter(r =>
+        r.name.toLowerCase().includes(q) ||
+        r.company.toLowerCase().includes(q) ||
+        r.email.toLowerCase().includes(q)
+      ));
+    });
+
+    function render(rows) {
+      const today = new Date().toDateString();
+      const todayCount = allRows.filter(r => new Date(r.created_at).toDateString() === today).length;
+      document.getElementById('totalCount').textContent = allRows.length;
+      document.getElementById('todayCount').textContent = todayCount;
+      document.getElementById('rowCount').textContent = rows.length !== allRows.length
+        ? `Showing ${rows.length} of ${allRows.length}` : `${allRows.length} total`;
+
+      const tbody = document.getElementById('tbody');
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty">No submissions found.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(r => {
+        const date = new Date(r.created_at);
+        const isNew = (Date.now() - date.getTime()) < 24 * 60 * 60 * 1000;
+        const dateStr = date.toLocaleString('th-TH', { timeZone: 'Asia/Bangkok', dateStyle: 'medium', timeStyle: 'short' });
+        return `<tr>
+          <td class="id-cell">${r.id}</td>
+          <td class="name-cell">${esc(r.name)}${isNew ? '<span class="badge">NEW</span>' : ''}</td>
+          <td>${esc(r.company)}</td>
+          <td class="email-cell"><a href="mailto:${esc(r.email)}">${esc(r.email)}</a></td>
+          <td class="phone-cell">${r.phone ? esc(r.phone) : '<span style="opacity:.3">—</span>'}</td>
+          <td class="date-cell">${dateStr}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
