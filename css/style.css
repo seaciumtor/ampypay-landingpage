@@ -88,6 +88,7 @@ body::after {
 .eyebrow-line { display: inline-block; width: 34px; height: 2px; background: var(--blue); flex: none; }
 .eyebrow-light { color: #6E96F5; }
 .eyebrow-light .eyebrow-line { background: #6E96F5; }
+.hero-eyebrow { color: #6E96F5; }
 
 .h2 {
   font-size: clamp(2.1rem, 4.6vw, 3.6rem);
@@ -99,6 +100,7 @@ body::after {
   max-width: 16ch;
 }
 .h2-light { color: var(--cream); }
+.h2.h2-light.split { line-height: 1.16; }
 
 .lead {
   font-size: clamp(1rem, 1.4vw, 1.15rem);
@@ -386,9 +388,9 @@ body::after {
   white-space: nowrap;
 }
 .float-chip em { font-style: normal; color: rgba(251, 251, 238, 0.6); }
-.chip-blockers { top: -26px; right: 8px; }
-.chip-ai { bottom: 18%; left: -42px; }
-.chip-filed { bottom: -24px; right: 14%; color: #9DC0FF; }
+.chip-blockers { top: 154px; right: -72px; }
+.chip-ai { bottom: calc(18% + 80px); left: -122px; }
+.chip-filed { bottom: 26px; right: calc(14% + 30px); color: #9DC0FF; }
 .chip-check { width: 16px; height: 16px; color: var(--blue); }
 .spark { color: var(--purple); }
 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
@@ -640,7 +642,7 @@ body::after {
   transition: background 0.3s, padding-left 0.3s;
 }
 .comp-row:hover { background: rgba(37, 99, 234, 0.07); padding-left: 22px; }
-.comp-num { font-size: 0.85rem; font-weight: 700; color: var(--blue); letter-spacing: 0.08em; padding-top: 6px; }
+.comp-num { font-size: 0.85rem; font-weight: 700; color: #6E96F5; letter-spacing: 0.08em; padding-top: 6px; }
 .comp-row h3 { font-size: clamp(1.15rem, 1.8vw, 1.4rem); font-weight: 700; letter-spacing: -0.015em; color: var(--cream); margin-bottom: 6px; }
 .comp-row p { font-size: 0.92rem; color: rgba(251, 251, 238, 0.6); }
 
@@ -737,7 +739,7 @@ body::after {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.sec-stat-num [data-count] { color: var(--blue); }
+.sec-stat-num [data-count] { color: var(--cream); }
 .sec-stat-label { font-size: 0.85rem; color: rgba(251, 251, 238, 0.58); max-width: 24ch; }
 
 .sec-certs, .sec-controls, .sec-partners {
@@ -749,6 +751,11 @@ body::after {
   font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
   color: rgba(251, 251, 238, 0.5);
   width: 180px; flex: none;
+}
+/* Only the "Security compliance" label centers against its chip row */
+.sec-certs > .sec-certs-label {
+  display: flex; align-items: center; gap: 28px;
+  align-self: stretch;
 }
 .cert-chips, .control-chips { display: flex; flex-wrap: wrap; gap: 10px; flex: 1; }
 .cert {
@@ -769,7 +776,7 @@ body::after {
 }
 .partner-row { display: flex; gap: 28px; flex-wrap: wrap; }
 .partner-row span {
-  font-size: 1.1rem; font-weight: 800; letter-spacing: 0.06em;
+  font-size: 15px; font-weight: 800; letter-spacing: 0.06em;
   color: rgba(251, 251, 238, 0.45);
   text-transform: uppercase;
 }
