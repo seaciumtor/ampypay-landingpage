@@ -419,6 +419,7 @@
 
       const globe = new THREE.Group();
       globe.rotation.z = 0.18;
+      globe.scale.setScalar(0.8); // headroom so lifted arcs stay inside the wrap
       scene2.add(globe);
 
       const R = 2.5;
@@ -489,11 +490,18 @@
         const g = new THREE.BufferGeometry();
         g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
         globe.add(new THREE.Points(g, new THREE.PointsMaterial({
-          color, size, transparent: true, opacity, depthWrite: false,
+          color, size, transparent: true, opacity, depthWrite: false, depthTest: false,
         })));
       }
       addDots(landPts, 0x5d8bf4, 0.032, 0.85);
       addDots(oceanPts, 0x3b74f0, 0.022, 0.18);
+
+      // Invisible depth-only occluder just inside the dot shell: hides arcs,
+      // markers and halos on the far hemisphere (dots skip depthTest above).
+      globe.add(new THREE.Mesh(
+        new THREE.SphereGeometry(R * 0.98, 48, 32),
+        new THREE.MeshBasicMaterial({ colorWrite: false })
+      ));
 
       // Data-center markers: US (Dallas), France (Paris), Thailand (Bangkok), Singapore
       const sites = [
@@ -504,7 +512,7 @@
       ];
       const markerGeo = new THREE.SphereGeometry(0.06, 12, 12);
       const markerMat = new THREE.MeshBasicMaterial({ color: 0x6e96f5 });
-      const haloMat = new THREE.MeshBasicMaterial({ color: 0x2563ea, transparent: true, opacity: 0.35 });
+      const haloMat = new THREE.MeshBasicMaterial({ color: 0xe89b0c, transparent: true, opacity: 0.35 });
       const halos = [];
       sites.forEach((v) => {
         const m = new THREE.Mesh(markerGeo, markerMat);
@@ -516,20 +524,95 @@
         halos.push(halo);
       });
 
+      // Provider logo badges anchored to the data-center sites. HTML overlays
+      // projected from 3D each frame; Thailand shares one chip (eUnite + INET).
+      const logoDefs = [
+        { site: 0, logos: [{ src: 'assets/misc/databank-US.png', alt: 'DataBank — US data center' }] },
+        { site: 1, logos: [{ src: 'assets/misc/aws-singapore-europe.png', alt: 'AWS — Europe region' }] },
+        { site: 2, logos: [
+          { src: 'assets/misc/eunite-thailand.png', alt: 'eUnite — Thailand data center' },
+          { src: 'assets/misc/inet-thailand.png', alt: 'INET — Thailand data center' },
+        ] },
+        { site: 3, logos: [{ src: 'assets/misc/aws-singapore-europe.png', alt: 'AWS — Singapore region' }] },
+      ];
+      const globeWrap = globeCanvas.parentElement;
+      const badges = logoDefs.map((def) => {
+        const el = document.createElement('div');
+        el.className = 'globe-logo';
+        def.logos.forEach((l) => {
+          const img = document.createElement('img');
+          img.src = l.src;
+          img.alt = l.alt;
+          el.appendChild(img);
+        });
+        globeWrap.appendChild(el);
+        return { el, site: def.site };
+      });
+      const badgeVec = new THREE.Vector3();
+      function updateBadges() {
+        globe.updateMatrixWorld();
+        const w = globeCanvas.clientWidth, h = globeCanvas.clientHeight;
+        badges.forEach((b) => {
+          badgeVec.copy(sites[b.site]).applyMatrix4(globe.matrixWorld);
+          // Surface normal vs. direction to camera: fade badges past the limb
+          const facing = badgeVec.clone().normalize()
+            .dot(camera2.position.clone().sub(badgeVec).normalize());
+          badgeVec.project(camera2);
+          const x = (badgeVec.x * 0.5 + 0.5) * w;
+          const y = (-badgeVec.y * 0.5 + 0.5) * h;
+          b.el.style.opacity = Math.max(0, Math.min(1, facing * 4)).toFixed(2);
+          b.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -135%)`;
+        });
+      }
+
       // Arcs between regions (France↔US, France↔Thailand, Thailand↔Singapore)
       const pairs = [[1, 0], [1, 2], [2, 3]];
       pairs.forEach(([a, b]) => {
         const va = sites[a], vb = sites[b];
-        const mid = va.clone().add(vb).multiplyScalar(0.5).normalize()
-          .multiplyScalar(R * (1.18 + va.distanceTo(vb) * 0.07));
-        const curve = new THREE.QuadraticBezierCurve3(va, mid, vb);
-        const pts = curve.getPoints(64);
+        // Great-circle path lifted by a sine bump: stays above the surface
+        // along its whole length (a straight bezier dips inside the sphere).
+        const angle = va.angleTo(vb);
+        const lift = 0.06 + angle * 0.05;
+        const SEG = 64;
+        const pts = [];
+        for (let s = 0; s <= SEG; s++) {
+          const t = s / SEG;
+          const p = va.clone().multiplyScalar(Math.sin((1 - t) * angle) / Math.sin(angle))
+            .add(vb.clone().multiplyScalar(Math.sin(t * angle) / Math.sin(angle)));
+          p.multiplyScalar(1 + lift * Math.sin(Math.PI * t));
+          pts.push(p);
+        }
         const arcGeo = new THREE.BufferGeometry().setFromPoints(pts);
         const arc = new THREE.Line(arcGeo, new THREE.LineBasicMaterial({
-          color: 0x2563ea, transparent: true, opacity: 0.55,
+          color: 0xf97316, transparent: true, opacity: 0.65,
         }));
         globe.add(arc);
       });
+
+      // Drag to spin (pointer events cover mouse + touch). Horizontal only:
+      // drags rotate around Y, inertia decays on release, then auto-rotation
+      // resumes. touch-action pan-y keeps vertical page scroll working.
+      let dragging = false, dragX = 0, dragVel = 0;
+      globeCanvas.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        dragX = e.clientX;
+        dragVel = 0;
+        globeCanvas.setPointerCapture(e.pointerId);
+        globeCanvas.style.cursor = 'grabbing';
+      });
+      globeCanvas.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const delta = (e.clientX - dragX) * 0.005;
+        dragX = e.clientX;
+        globe.rotation.y += delta;
+        dragVel = Math.max(-0.05, Math.min(0.05, delta));
+      });
+      function endDrag() {
+        dragging = false;
+        globeCanvas.style.cursor = '';
+      }
+      globeCanvas.addEventListener('pointerup', endDrag);
+      globeCanvas.addEventListener('pointercancel', endDrag);
 
       function resize2() {
         const w = globeCanvas.clientWidth, h = globeCanvas.clientHeight;
@@ -549,15 +632,23 @@
         requestAnimationFrame(tick2);
         if (!visible2) return;
         resize2();
+        if (!dragging) {
+          if (Math.abs(dragVel) > 0.0002) {
+            globe.rotation.y += dragVel;
+            dragVel *= 0.95;
+          } else if (!reduced) {
+            globe.rotation.y += 0.0016;
+          }
+        }
         if (!reduced) {
           t2 += 0.016;
-          globe.rotation.y += 0.0016;
           halos.forEach((h, idx) => {
             const s = 1 + Math.sin(t2 * 2.4 + idx * 1.4) * 0.35;
             h.scale.setScalar(s);
             h.material.opacity = 0.18 + Math.abs(Math.sin(t2 * 2.4 + idx * 1.4)) * 0.25;
           });
         }
+        updateBadges();
         renderer2.render(scene2, camera2);
       }
       tick2();
@@ -577,7 +668,8 @@
       }
       _s('js/vendor/three.min.js', () => _s('js/world-land.js', initThreeJS));
     }
-    if (heroImg && heroImg.complete && heroImg.naturalWidth) {
+    if (heroImg && heroImg.complete) {
+      // complete covers both loaded and already-failed — never strand three.js
       _loadThree();
     } else if (heroImg) {
       heroImg.addEventListener('load', _loadThree, { once: true });

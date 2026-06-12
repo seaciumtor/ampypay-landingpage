@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <defs>
+    <path id="st" fill="#fff" d="M0,-1.8 0.41,-0.56 1.71,-0.56 0.66,0.21 1.06,1.46 0,0.69 -1.06,1.46 -0.66,0.21 -1.71,-0.56 -0.41,-0.56Z"/>
+  </defs>
+  <rect width="60" height="40" fill="#fff"/>
+  <rect width="60" height="20" fill="#EF3340"/>
+  <circle cx="15" cy="10" r="6.1" fill="#fff"/>
+  <circle cx="16.7" cy="10" r="5.4" fill="#EF3340"/>
+  <use href="#st" x="22.5" y="6.3"/>
+  <use href="#st" x="26.1" y="8.9"/>
+  <use href="#st" x="24.7" y="13.1"/>
+  <use href="#st" x="20.3" y="13.1"/>
+  <use href="#st" x="18.9" y="8.9"/>
+</svg>
