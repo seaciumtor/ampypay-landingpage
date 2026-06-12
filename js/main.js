@@ -590,7 +590,10 @@
   /* ============================================================
      DEMO MODAL
      ============================================================ */
-  const DEMO_API = 'http://localhost:3001/api/demo'; // LOCAL TEST // ← เปลี่ยนเป็น URL backend จริง
+  const BACKEND = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3001'
+    : 'https://ampypay-backend.onrender.com';
+  const DEMO_API = BACKEND + '/api/demo';
 
   const overlay   = document.getElementById('demoOverlay');
   const demoForm  = document.getElementById('demoForm');
