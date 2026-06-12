@@ -87,7 +87,7 @@ Dark sections use `-light` modifier classes (`.h2-light`, `.lead-light`, `.eyebr
 - Headlines are tight (negative tracking, line-height ≈ 1) and heavy (800–900). Body stays at 400–600.
 - Reduced-opacity foreground color (not gray hex values) creates text hierarchy: 100% → 72% → 60% → 55%.
 - `font-variant-numeric: tabular-nums` on all animated/aligned numbers (counters, stats, preloader).
-- Accent words in headlines get `color: var(--blue)` via `.accent` (e.g. "Global Payroll").
+- Accent words in headlines get `color: var(--blue)` via `.accent` (e.g. "Reimagined.").
 
 ### Recurring patterns
 
