@@ -8,10 +8,11 @@
   <meta property="og:title" content="AmpyPay — Purpose-built for Global Payroll" />
   <meta property="og:description" content="AI-assisted payroll operations platform for modern enterprise workforce management." />
   <link rel="icon" type="image/svg+xml" href="assets/logos/icon.svg" />
-  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+
 
   <!-- Preloader -->
   <div class="preloader" id="preloader" aria-hidden="true">
@@ -85,9 +86,13 @@
         </div>
 
         <div class="hero-visual" id="heroVisual">
-          <img class="hero-shot" id="mockPanel" src="assets/images/hero1.png"
-               alt="AmpyPay payroll operations dashboard on a tablet, showing the upcoming payroll run, confidence score and inbox"
-               width="3462" height="2644" fetchpriority="high" />
+          <picture>
+            <source srcset="assets/images/hero1@1x.webp 560w, assets/images/hero1.webp 1120w"
+                    sizes="(max-width: 768px) 100vw, 560px" type="image/webp" />
+            <img class="hero-shot" id="mockPanel" src="assets/images/hero1.png"
+                 alt="AmpyPay payroll operations dashboard on a tablet, showing the upcoming payroll run, confidence score and inbox"
+                 width="560" height="428" fetchpriority="high" />
+          </picture>
           <div class="float-chip chip-blockers" aria-hidden="true">
             <span class="dot dot-red"></span> 9 blockers · <em>must resolve</em>
           </div>
@@ -146,9 +151,13 @@
           </div>
         </div>
         <div class="why-shot" data-reveal>
-          <img src="assets/images/why-ampypay.png"
-               alt="AmpyPay payroll preparation overview with blockers, warnings and anomalies surfaced in a checklist"
-               width="1115" height="853" loading="lazy" />
+          <picture>
+            <source srcset="assets/images/why-ampypay@1x.webp 705w, assets/images/why-ampypay.webp 1115w"
+                    sizes="(max-width: 768px) 100vw, 705px" type="image/webp" />
+            <img src="assets/images/why-ampypay.png"
+                 alt="AmpyPay payroll preparation overview with blockers, warnings and anomalies surfaced in a checklist"
+                 width="1115" height="853" loading="lazy" />
+          </picture>
         </div>
         <div class="built-for" data-reveal>
           <span class="built-for-label">Built for</span>
@@ -462,11 +471,9 @@
     </div>
   </footer>
 
-  <script src="js/vendor/gsap.min.js"></script>
-  <script src="js/vendor/ScrollTrigger.min.js"></script>
-  <script src="js/vendor/lenis.min.js"></script>
-  <script src="js/vendor/three.min.js"></script>
-  <script src="js/world-land.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>
