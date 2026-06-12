@@ -855,6 +855,8 @@ body::after {
 .demo-close:hover { color: var(--cream); }
 
 .demo-modal-head { margin-bottom: 28px; }
+.demo-modal .eyebrow { color: #3D7DFF; }
+.demo-modal .eyebrow-line { background: #3D7DFF; }
 .demo-title { font-size: 1.55rem; font-weight: 700; color: var(--cream); margin: 8px 0 6px; }
 .demo-subtitle { font-size: 0.88rem; color: rgba(251,251,238,0.55); }
 
@@ -865,7 +867,7 @@ body::after {
 
 .demo-field { display: flex; flex-direction: column; gap: 6px; }
 .demo-field label { font-size: 0.82rem; font-weight: 600; color: rgba(251,251,238,0.7); letter-spacing: 0.01em; }
-.demo-field label span { color: var(--blue); }
+.demo-field label span { color: #3D7DFF; }
 .demo-field input {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.14);
