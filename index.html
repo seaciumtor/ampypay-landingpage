@@ -8,10 +8,11 @@
   <meta property="og:title" content="AmpyPay — Purpose-built for Global Payroll" />
   <meta property="og:description" content="AI-assisted payroll operations platform for modern enterprise workforce management." />
   <link rel="icon" type="image/svg+xml" href="assets/logos/icon.svg" />
-  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+
 
   <!-- Preloader -->
   <div class="preloader" id="preloader" aria-hidden="true">
@@ -146,9 +147,13 @@
           </div>
         </div>
         <div class="why-shot" data-reveal>
-          <img src="assets/images/why-ampypay.png"
-               alt="AmpyPay payroll preparation overview with blockers, warnings and anomalies surfaced in a checklist"
-               width="1115" height="853" loading="lazy" />
+          <picture>
+            <source srcset="assets/images/why-ampypay@1x.webp 705w, assets/images/why-ampypay.webp 1115w"
+                    sizes="(max-width: 768px) 100vw, 705px" type="image/webp" />
+            <img src="assets/images/why-ampypay.png"
+                 alt="AmpyPay payroll preparation overview with blockers, warnings and anomalies surfaced in a checklist"
+                 width="1115" height="853" loading="lazy" />
+          </picture>
         </div>
         <div class="built-for" data-reveal>
           <span class="built-for-label">Built for</span>
@@ -202,10 +207,10 @@
           <div class="exc-visual">
             <img class="exc-shot-back" src="assets/images/exception02.png"
                  alt="AmpyPay payroll sheet with per-employee hours, gross and net pay"
-                 width="664" height="510" loading="lazy" />
+                 width="1328" height="1020" loading="lazy" />
             <img class="exc-shot-front" src="assets/images/exception01.png"
                  alt="AmpyPay exceptions inbox listing blockers, warnings and AI-detected anomalies"
-                 width="683" height="754" loading="lazy" />
+                 width="1366" height="1508" loading="lazy" />
           </div>
         </div>
       </div>
@@ -224,7 +229,7 @@
             <div class="conf-shot-wrap">
               <img class="conf-shot" src="assets/images/payroll-confidence-score.png"
                    alt="AmpyPay submission screen showing a 90% payroll confidence score with open blockers and warnings"
-                   width="1171" height="871" loading="lazy" />
+                   width="2342" height="1742" loading="lazy" />
               <div class="conf-badge" aria-hidden="true">
                 <div class="ring ring-sm">
                   <svg viewBox="0 0 96 96">
@@ -317,13 +322,13 @@
           <div class="comp-visuals" data-reveal>
             <img class="comp-shot comp-shot--audit" src="assets/images/compliance02.png"
                  alt="AmpyPay audit log of compliance-sensitive actions with viewable receipts"
-                 width="755" height="610" loading="lazy" />
+                 width="1510" height="1220" loading="lazy" />
             <img class="comp-shot comp-shot--tax" src="assets/images/compliance-01.png"
                  alt="AmpyPay dynamic Federal W-4 tax onboarding form"
                  width="661" height="544" loading="lazy" />
             <img class="comp-shot comp-shot--receipt" src="assets/images/compliance03.png"
                  alt="Signed, time-stamped receipt for a submitted state tax form with electronic signature"
-                 width="474" height="483" loading="lazy" />
+                 width="948" height="966" loading="lazy" />
           </div>
         </div>
         <p class="section-footnote footnote-light" data-reveal>Designed to support enterprise-grade governance, operational accountability, and compliance readiness across global payroll environments.</p>
@@ -462,11 +467,9 @@
     </div>
   </footer>
 
-  <script src="js/vendor/gsap.min.js"></script>
-  <script src="js/vendor/ScrollTrigger.min.js"></script>
-  <script src="js/vendor/lenis.min.js"></script>
-  <script src="js/vendor/three.min.js"></script>
-  <script src="js/world-land.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

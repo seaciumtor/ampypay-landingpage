@@ -99,7 +99,7 @@
       .from('#heroSub', { opacity: 0, y: 24, duration: 0.9 }, 0.55)
       .from('#heroCtas', { opacity: 0, y: 24, duration: 0.9 }, 0.7)
       .from('#heroBadges', { opacity: 0, y: 18, duration: 0.8 }, 0.85)
-      .from('#mockPanel', { opacity: 0, y: 56, rotateX: 8, duration: 1.2, ease: 'power3.out' }, 0.5)
+      .from('#mockPanel', { opacity: 0, y: 56, rotateX: 8, duration: 1.0, ease: 'power3.out' }, 0.3)
       .from('.float-chip', { opacity: 0, y: 26, scale: 0.92, duration: 0.8, stagger: 0.12 }, 0.9);
   }
 
@@ -127,10 +127,10 @@
       },
     });
     preTl.to(count, {
-      v: 100, duration: 1.1, ease: 'power2.inOut',
+      v: 100, duration: 0.75, ease: 'power2.inOut',
       onUpdate: () => { countEl.textContent = Math.round(count.v); },
     })
-      .from('.preloader-spinner', { scale: 0.7, opacity: 0, duration: 0.7, ease: 'back.out(1.7)' }, 0);
+      .from('.preloader-spinner', { scale: 0.7, opacity: 0, duration: 0.5, ease: 'back.out(1.7)' }, 0);
   }
 
   /* ---------------- Counters ---------------- */
@@ -326,7 +326,9 @@
     } catch (e) { return false; }
   }
 
-  if (hasThree && webglAvailable()) {
+  function initThreeJS() {
+    if (!window.THREE || !webglAvailable()) return;
+    {
     const canvas = document.getElementById('hero-canvas');
     if (canvas) {
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
@@ -561,4 +563,29 @@
       tick2();
     }
   }
+  }
+
+  if (hasThree) {
+    initThreeJS();
+  } else {
+    const heroImg = document.getElementById('mockPanel');
+    function _loadThree() {
+      function _s(src, cb) {
+        const s = document.createElement('script');
+        s.src = src; s.onload = cb;
+        document.body.appendChild(s);
+      }
+      _s('js/vendor/three.min.js', () => _s('js/world-land.js', initThreeJS));
+    }
+    if (heroImg && heroImg.complete && heroImg.naturalWidth) {
+      _loadThree();
+    } else if (heroImg) {
+      heroImg.addEventListener('load', _loadThree, { once: true });
+      heroImg.addEventListener('error', _loadThree, { once: true });
+    } else {
+      window.addEventListener('load', _loadThree, { once: true });
+    }
+  }
+
+
 })();
