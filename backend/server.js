@@ -73,8 +73,11 @@ app.post('/api/demo', demoLimiter, async (req, res) => {
 
   db.insertSubmission({ name: name.trim(), company: company.trim(), email: email.trim(), phone: phone?.trim() || '', ip });
 
+  const submitTime = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
+
+  // 1. Internal notification
   transporter.sendMail({
-    from: `"AmpyPay Demo" <${process.env.SMTP_USER}>`,
+    from: `"AmpyPay" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFY_EMAIL,
     subject: `[AmpyPay] New demo request — ${name.trim()} (${company.trim()})`,
     html: `
@@ -84,10 +87,91 @@ app.post('/api/demo', demoLimiter, async (req, res) => {
         <tr><td style="padding:6px 12px;font-weight:bold">Company</td><td style="padding:6px 12px">${company.trim()}</td></tr>
         <tr><td style="padding:6px 12px;font-weight:bold">Email</td><td style="padding:6px 12px"><a href="mailto:${email.trim()}">${email.trim()}</a></td></tr>
         <tr><td style="padding:6px 12px;font-weight:bold">Phone</td><td style="padding:6px 12px">${phone?.trim() || '—'}</td></tr>
-        <tr><td style="padding:6px 12px;font-weight:bold">Time</td><td style="padding:6px 12px">${new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</td></tr>
+        <tr><td style="padding:6px 12px;font-weight:bold">Time</td><td style="padding:6px 12px">${submitTime}</td></tr>
       </table>
     `,
-  }).catch((err) => console.error('Email send error:', err.message));
+  }).catch((err) => console.error('Notify email error:', err.message));
+
+  // 2. Confirmation email to customer
+  transporter.sendMail({
+    from: `"AmpyPay" <${process.env.SMTP_USER}>`,
+    to: email.trim(),
+    subject: `Thank you for your interest in AmpyPay`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="UTF-8"></head>
+      <body style="margin:0;padding:0;background:#f4f6f9;font-family:'Helvetica Neue',Arial,sans-serif">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f9;padding:40px 16px">
+          <tr><td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;max-width:600px;width:100%">
+
+              <!-- Header -->
+              <tr>
+                <td style="background:#0A1F44;padding:32px 40px;text-align:center">
+                  <div style="display:inline-flex;align-items:center;gap:10px">
+                    <span style="font-size:22px;font-weight:700;color:#FBFBEE;letter-spacing:-0.5px">Ampy<span style="color:#2563EA">Pay</span></span>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Body -->
+              <tr>
+                <td style="padding:40px 40px 32px">
+                  <h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#0A1F44">Thank you, ${name.trim()}!</h1>
+                  <p style="margin:0 0 24px;font-size:15px;color:#4b5563;line-height:1.6">
+                    We've received your demo request from <strong>${company.trim()}</strong>.<br>
+                    Our team will reach out to you shortly to schedule a personalized demo.
+                  </p>
+
+                  <!-- Summary box -->
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:28px">
+                    <tr><td style="padding:20px 24px">
+                      <p style="margin:0 0 12px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#9ca3af">Request Summary</p>
+                      <table cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="padding:4px 16px 4px 0;font-size:14px;color:#6b7280;white-space:nowrap">Name</td>
+                          <td style="padding:4px 0;font-size:14px;color:#111827;font-weight:500">${name.trim()}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 16px 4px 0;font-size:14px;color:#6b7280;white-space:nowrap">Company</td>
+                          <td style="padding:4px 0;font-size:14px;color:#111827;font-weight:500">${company.trim()}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 16px 4px 0;font-size:14px;color:#6b7280;white-space:nowrap">Email</td>
+                          <td style="padding:4px 0;font-size:14px;color:#111827;font-weight:500">${email.trim()}</td>
+                        </tr>
+                        ${phone?.trim() ? `<tr>
+                          <td style="padding:4px 16px 4px 0;font-size:14px;color:#6b7280;white-space:nowrap">Phone</td>
+                          <td style="padding:4px 0;font-size:14px;color:#111827;font-weight:500">${phone.trim()}</td>
+                        </tr>` : ''}
+                      </table>
+                    </td></tr>
+                  </table>
+
+                  <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.6">
+                    If you have any questions in the meantime, feel free to reply to this email.<br>
+                    We look forward to speaking with you.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Footer -->
+              <tr>
+                <td style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center">
+                  <p style="margin:0;font-size:12px;color:#9ca3af">
+                    © 2024 AmpyPay &nbsp;·&nbsp; This email was sent because you requested a demo at ampypay.com
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+          </td></tr>
+        </table>
+      </body>
+      </html>
+    `,
+  }).catch((err) => console.error('Confirmation email error:', err.message));
 
   res.json({ success: true });
 });
