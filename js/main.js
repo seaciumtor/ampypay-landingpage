@@ -587,5 +587,88 @@
     }
   }
 
+  /* ============================================================
+     DEMO MODAL
+     ============================================================ */
+  const DEMO_API = 'http://localhost:3001/api/demo'; // LOCAL TEST // ← เปลี่ยนเป็น URL backend จริง
+
+  const overlay   = document.getElementById('demoOverlay');
+  const demoForm  = document.getElementById('demoForm');
+  const demoClose = document.getElementById('demoClose');
+  const demoSuccess = document.getElementById('demoSuccess');
+  const demoSubmit  = document.getElementById('demoSubmit');
+
+  function openDemoModal() {
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    overlay.querySelector('input:not([type=hidden]):not([style])').focus();
+  }
+  function closeDemoModal() {
+    overlay.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-demo]').forEach((el) => {
+    el.addEventListener('click', (e) => { e.preventDefault(); openDemoModal(); });
+  });
+
+  demoClose.addEventListener('click', closeDemoModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDemoModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) closeDemoModal(); });
+
+  function setError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = msg;
+  }
+  function clearErrors() {
+    ['errName','errCompany','errEmail','errGlobal'].forEach(id => setError(id, ''));
+    demoForm.querySelectorAll('.is-error').forEach(el => el.classList.remove('is-error'));
+  }
+
+  demoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    const name    = document.getElementById('demoName').value.trim();
+    const company = document.getElementById('demoCompany').value.trim();
+    const email   = document.getElementById('demoEmail').value.trim();
+    const phone   = document.getElementById('demoPhone').value.trim();
+    const hp      = demoForm.querySelector('[name="_hp"]').value;
+
+    let valid = true;
+    if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }
+    if (!company) { setError('errCompany', 'Required'); document.getElementById('demoCompany').classList.add('is-error'); valid = false; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('errEmail', 'Valid email required');
+      document.getElementById('demoEmail').classList.add('is-error');
+      valid = false;
+    }
+    if (!valid) return;
+
+    demoSubmit.disabled = true;
+    demoSubmit.textContent = 'Sending…';
+
+    try {
+      const res = await fetch(DEMO_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, company, email, phone, _hp: hp }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError('errGlobal', data.error || 'Something went wrong. Please try again.');
+        demoSubmit.disabled = false;
+        demoSubmit.textContent = 'Request a demo';
+        return;
+      }
+      demoForm.hidden = true;
+      demoSuccess.hidden = false;
+      document.getElementById('demoSuccessEmail').textContent = email;
+    } catch {
+      setError('errGlobal', 'Network error. Please check your connection and try again.');
+      demoSubmit.disabled = false;
+      demoSubmit.textContent = 'Request a demo';
+    }
+  });
 
 })();

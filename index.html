@@ -13,6 +13,51 @@
 </head>
 <body>
 
+  <!-- Demo request modal -->
+  <div class="demo-overlay" id="demoOverlay" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" hidden>
+    <div class="demo-modal">
+      <button class="demo-close" id="demoClose" aria-label="Close">&times;</button>
+      <div class="demo-modal-head">
+        <p class="eyebrow"><span class="eyebrow-line"></span>Get a demo</p>
+        <h2 class="demo-title" id="demoModalTitle">See AmpyPay in action</h2>
+        <p class="demo-subtitle">Fill in your details and we'll be in touch within one business day.</p>
+      </div>
+      <form class="demo-form" id="demoForm" novalidate>
+        <!-- Honeypot — hidden from humans, bots fill it -->
+        <input type="text" name="_hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
+        <div class="demo-row">
+          <div class="demo-field">
+            <label for="demoName">Full name <span aria-hidden="true">*</span></label>
+            <input type="text" id="demoName" name="name" placeholder="Jane Smith" autocomplete="name" required />
+            <span class="field-error" id="errName"></span>
+          </div>
+          <div class="demo-field">
+            <label for="demoCompany">Company <span aria-hidden="true">*</span></label>
+            <input type="text" id="demoCompany" name="company" placeholder="Acme Corp" autocomplete="organization" required />
+            <span class="field-error" id="errCompany"></span>
+          </div>
+        </div>
+        <div class="demo-row">
+          <div class="demo-field">
+            <label for="demoEmail">Work email <span aria-hidden="true">*</span></label>
+            <input type="email" id="demoEmail" name="email" placeholder="jane@acme.com" autocomplete="email" required />
+            <span class="field-error" id="errEmail"></span>
+          </div>
+          <div class="demo-field">
+            <label for="demoPhone">Phone</label>
+            <input type="tel" id="demoPhone" name="phone" placeholder="+66 81 234 5678" autocomplete="tel" />
+          </div>
+        </div>
+        <span class="field-error" id="errGlobal"></span>
+        <button type="submit" class="btn btn-primary demo-submit" id="demoSubmit">Request a demo</button>
+      </form>
+      <div class="demo-success" id="demoSuccess" hidden>
+        <div class="demo-success-icon">✓</div>
+        <h3>Request received!</h3>
+        <p>We'll reach out to <strong id="demoSuccessEmail"></strong> within one business day.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Preloader -->
   <div class="preloader" id="preloader" aria-hidden="true">
@@ -44,7 +89,7 @@
         <a href="#security">Security</a>
       </nav>
       <div class="nav-actions">
-        <a href="#cta" class="btn btn-primary btn-sm" data-magnetic>Get a demo</a>
+        <a href="#" class="btn btn-primary btn-sm" data-magnetic data-demo>Get a demo</a>
         <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
           <span></span><span></span>
         </button>
@@ -60,7 +105,7 @@
       <a href="#confidence">Confidence Engine</a>
       <a href="#compliance">Compliance</a>
       <a href="#security">Security</a>
-      <a href="#cta" class="mobile-cta">Get a demo</a>
+      <a href="#" class="mobile-cta" data-demo>Get a demo</a>
     </nav>
     <p class="mobile-tag">We handle payroll. You handle growth.</p>
   </div>
@@ -77,7 +122,7 @@
           <h1 class="hero-title" id="heroTitle">Purpose-built for <span class="accent">Global&nbsp;Payroll</span></h1>
           <p class="hero-sub" id="heroSub">AI-assisted payroll operations platform for modern enterprise workforce management.</p>
           <div class="hero-ctas" id="heroCtas">
-            <a href="#cta" class="btn btn-primary" data-magnetic>Get a demo</a>
+            <a href="#" class="btn btn-primary" data-magnetic data-demo>Get a demo</a>
             <a href="#why" class="btn btn-ghost" data-magnetic>Explore the platform</a>
           </div>
           <div class="hero-badges" id="heroBadges">
@@ -428,7 +473,7 @@
         <p class="cta-strong" data-reveal>Built for complexity. Designed for confidence.</p>
         <p class="lead lead-light cta-lead" data-reveal>AmpyPay combines payroll operations, compliance governance, AI-assisted validation, and enterprise scalability into a single modern payroll platform.</p>
         <div class="hero-ctas cta-ctas" data-reveal>
-          <a href="#top" class="btn btn-primary btn-lg" data-magnetic>Get a demo</a>
+          <a href="#" class="btn btn-primary btn-lg" data-magnetic data-demo>Get a demo</a>
         </div>
         <div class="hero-badges cta-badges" data-reveal>
           <span class="pill pill-outline">Live preview available</span>
