@@ -17,11 +17,15 @@ import mimetypes
 import os
 import re
 import smtplib
+import socketserver
 import sqlite3
 import threading
 import urllib.parse
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+class _ThreadingHTTPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
+    daemon_threads = True
 
 # ── Config ────────────────────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -43,6 +47,8 @@ DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 _db_lock = threading.Lock()
 
 def get_db():
+    db_dir = os.path.dirname(os.path.abspath(DB_PATH))
+    os.makedirs(db_dir, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
@@ -388,7 +394,7 @@ if __name__ == '__main__':
         DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 
     init_db()
-    server = http.server.ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
+    server = _ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
     print(f'AmpyPay running on http://0.0.0.0:{PORT}')
     print(f'Admin: http://localhost:{PORT}/admin?token={ADMIN_TOKEN}')
     try:
