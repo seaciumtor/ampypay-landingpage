@@ -269,6 +269,10 @@ def serve_static(handler, path):
     handler.send_response(200)
     handler.send_header('Content-Type', mime)
     handler.send_header('Content-Length', str(len(body)))
+    # Force markup/styles/scripts to revalidate so edits always reach the
+    # browser (iOS Safari otherwise caches these hard and ignores ?v= bumps).
+    if mime in ('text/html', 'text/css', 'application/javascript', 'text/javascript'):
+        handler.send_header('Cache-Control', 'no-cache, must-revalidate')
     handler.end_headers()
     handler.wfile.write(body)
 
