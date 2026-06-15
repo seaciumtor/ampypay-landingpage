@@ -915,6 +915,28 @@ body::after {
 .demo-field input::placeholder { color: rgba(251,251,238,0.25); }
 .demo-field input:focus { border-color: var(--blue); background: rgba(37,99,234,0.08); }
 .demo-field input.is-error { border-color: #f87171; }
+.demo-field select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px; padding: 11px 14px;
+  color: var(--cream); font-size: 0.9rem;
+  outline: none; transition: border-color 0.2s, background 0.2s;
+  font-family: inherit; width: 100%; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(251,251,238,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.demo-field select option { background: #0d2550; color: var(--cream); }
+.demo-field select:focus { border-color: var(--blue); background-color: rgba(37,99,234,0.08); }
+
+.demo-privacy { display: flex; flex-direction: column; gap: 4px; }
+.demo-privacy-label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.demo-privacy-label input[type="checkbox"] {
+  width: 16px; height: 16px; min-width: 16px; margin-top: 2px;
+  accent-color: var(--blue); cursor: pointer;
+}
+.demo-privacy-label span { font-size: 0.78rem; color: rgba(251,251,238,0.55); line-height: 1.5; }
+.demo-privacy-label a { color: #3D7DFF; text-decoration: underline; }
 
 .field-error { font-size: 0.78rem; color: #f87171; min-height: 1em; }
 

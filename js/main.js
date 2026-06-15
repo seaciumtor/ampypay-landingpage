@@ -714,7 +714,7 @@
     if (el) el.textContent = msg;
   }
   function clearErrors() {
-    ['errName','errCompany','errEmail','errGlobal'].forEach(id => setError(id, ''));
+    ['errName','errCompany','errEmail','errPhone','errPrivacy','errGlobal'].forEach(id => setError(id, ''));
     demoForm.querySelectorAll('.is-error').forEach(el => el.classList.remove('is-error'));
   }
 
@@ -722,20 +722,25 @@
     e.preventDefault();
     clearErrors();
 
-    const name    = document.getElementById('demoName').value.trim();
-    const company = document.getElementById('demoCompany').value.trim();
-    const email   = document.getElementById('demoEmail').value.trim();
-    const phone   = document.getElementById('demoPhone').value.trim();
-    const hp      = demoForm.querySelector('[name="_hp"]').value;
+    const email     = document.getElementById('demoEmail').value.trim();
+    const phone     = document.getElementById('demoPhone').value.trim();
+    const name      = document.getElementById('demoName').value.trim();
+    const jobTitle  = document.getElementById('demoJobTitle').value.trim();
+    const company   = document.getElementById('demoCompany').value.trim();
+    const employees = document.getElementById('demoEmployees').value;
+    const privacy   = document.getElementById('demoPrivacy').checked;
+    const hp        = demoForm.querySelector('[name="_hp"]').value;
 
     let valid = true;
-    if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }
-    if (!company) { setError('errCompany', 'Required'); document.getElementById('demoCompany').classList.add('is-error'); valid = false; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('errEmail', 'Valid email required');
       document.getElementById('demoEmail').classList.add('is-error');
       valid = false;
     }
+    if (!phone) { setError('errPhone', 'Required'); document.getElementById('demoPhone').classList.add('is-error'); valid = false; }
+    if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }
+    if (!company) { setError('errCompany', 'Required'); document.getElementById('demoCompany').classList.add('is-error'); valid = false; }
+    if (!privacy) { setError('errPrivacy', 'Please agree to the Privacy Policy to continue.'); valid = false; }
     if (!valid) return;
 
     demoSubmit.disabled = true;
@@ -745,7 +750,7 @@
       const res = await fetch(DEMO_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, company, email, phone, _hp: hp }),
+        body: JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp }),
       });
       const data = await res.json();
       if (!res.ok) {
