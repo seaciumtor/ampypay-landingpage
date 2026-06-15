@@ -272,6 +272,7 @@ body::before {
 .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
 
 .nav-actions { display: flex; align-items: center; gap: 16px; }
+.nav-actions .mobile-cta { display: none; }
 .nav-burger {
   display: none;
   flex-direction: column; gap: 6px;
@@ -297,9 +298,7 @@ body::before {
   padding: 10px 0;
   border-bottom: 1px solid var(--line-light);
 }
-.mobile-menu nav a.mobile-cta { color: var(--blue); border-bottom: none; }
-.mobile-tag { margin-top: 40px; color: rgba(251, 251, 238, 0.5); font-size: 0.95rem; }
-
+.mobile-menu nav a:last-child { border-bottom: none; }
 /* ============ Hero ============ */
 .hero {
   position: relative;
@@ -403,7 +402,9 @@ body::before {
   white-space: nowrap;
 }
 .float-chip em { font-style: normal; color: rgba(251, 251, 238, 0.6); }
-.chip-blockers { top: 154px; right: -97px; }
+/* Overhang up to 97px on wide screens, but tuck in to fit the gutter on smaller
+   desktops so the chip is never clipped by the hero's overflow: hidden. */
+.chip-blockers { top: 154px; right: calc(0px - min(97px, max(24px, (100vw - 1200px) / 2) - 8px)); }
 .chip-ai { bottom: calc(18% + 80px); left: -97px; }
 .chip-filed { bottom: 26px; right: calc(14% + 5px); color: #9DC0FF; }
 .chip-check { width: 16px; height: 16px; color: var(--blue); }
@@ -522,13 +523,16 @@ body::before {
 .exc-shot-back, .exc-shot-front {
   position: relative;
   width: 100%; height: auto;
-  filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.45));
+  filter: none;
 }
+/* Apply the drop-shadow only once the image has loaded — otherwise the
+   reserved (empty) box casts a phantom rectangular shadow during load. */
+.exc-shot-back.is-loaded { filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.45)); }
 .exc-shot-back { width: 88%; }
 .exc-shot-front {
   width: 64%; margin: -26% 0 0 auto; display: block;
-  filter: drop-shadow(0 32px 60px rgba(0, 0, 0, 0.55));
 }
+.exc-shot-front.is-loaded { filter: drop-shadow(0 32px 60px rgba(0, 0, 0, 0.55)); }
 .exc-note {
   margin-top: 28px; padding-left: 18px;
   border-left: 3px solid var(--blue);
@@ -1062,6 +1066,7 @@ body::before {
   .nav-links { display: none; }
   .nav-burger { display: flex; }
   .nav-actions .btn { display: none; }
+  .nav-actions .mobile-cta { display: inline-flex; }
 
   .hero { padding-bottom: 72px; }
   .hero-grid { grid-template-columns: 1fr; gap: 72px; }
@@ -1121,7 +1126,7 @@ body::before {
   /* Compact hero: every element visible within the first fold */
   .hero { min-height: 85svh; padding: calc(78px) 0 24px; }
   .hero-grid { gap: 20px; }
-  .hero-eyebrow { margin-bottom: 24px; font-size: 0.7rem; }
+  .hero-eyebrow { margin-top: 16px; margin-bottom: 24px; font-size: 0.7rem; }
   .hero-title { font-size: clamp(1.6rem, 9.5vw, 2.1rem); margin-bottom: 16px; }
   .hero-sub { font-size: clamp(1rem, 1.4vw, 1.15rem); margin-bottom: 32px; }
   .hero-ctas { gap: 10px; margin-bottom: 16px; }

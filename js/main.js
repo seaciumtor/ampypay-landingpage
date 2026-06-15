@@ -25,6 +25,16 @@
     gsap.ticker.lagSmoothing(0);
   }
 
+  // Mark layered product shots as loaded so their drop-shadow only
+  // appears once the image is painted (avoids a phantom box shadow).
+  document.querySelectorAll('.exc-shot-back, .exc-shot-front').forEach((img) => {
+    if (img.complete && img.naturalWidth > 0) {
+      img.classList.add('is-loaded');
+    } else {
+      img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+    }
+  });
+
   // Anchor navigation that respects Lenis
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
