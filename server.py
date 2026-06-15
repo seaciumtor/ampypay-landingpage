@@ -384,7 +384,7 @@ if __name__ == '__main__':
         DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 
     init_db()
-    server = http.server.HTTPServer(('0.0.0.0', PORT), Handler)
+    server = http.server.ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
     print(f'AmpyPay running on http://0.0.0.0:{PORT}')
     print(f'Admin: http://localhost:{PORT}/admin?token={ADMIN_TOKEN}')
     try:

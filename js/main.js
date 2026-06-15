@@ -800,13 +800,17 @@
     demoSubmit.disabled = true;
     demoSubmit.textContent = 'Sending…';
 
+    const payload = JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp });
     try {
-      const res = await fetch(DEMO_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp }),
-      });
-      const data = await res.json();
+      let res, data;
+      for (let attempt = 0; attempt <= 2; attempt++) {
+        if (attempt > 0) await new Promise(r => setTimeout(r, 700 * attempt));
+        try {
+          res = await fetch(DEMO_API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload });
+          if (res.status < 500) break;
+        } catch { if (attempt === 2) throw new Error('network'); }
+      }
+      data = await res.json();
       if (!res.ok) {
         setError('errGlobal', data.error || 'Something went wrong. Please try again.');
         demoSubmit.disabled = false;
