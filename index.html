@@ -51,19 +51,32 @@
           <span class="field-error" id="errCompany"></span>
         </div>
         <div class="demo-field">
-          <label for="demoEmployees">Number of employees</label>
-          <select id="demoEmployees" name="employees">
-            <option value="">Select range…</option>
-            <option value="1-300">1–300</option>
-            <option value="301-500">301–500</option>
-            <option value="501-1,000">501–1,000</option>
-            <option value="1,000+">More than 1,000</option>
-          </select>
+          <label id="empLabel">Number of employees</label>
+          <div class="demo-select" id="employeesSelect" role="combobox" aria-labelledby="empLabel" aria-haspopup="listbox" aria-expanded="false">
+            <button type="button" class="demo-select-btn" tabindex="0">
+              <span class="demo-select-val">Select range…</span>
+              <svg class="demo-select-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+                <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <ul class="demo-select-list" role="listbox">
+              <li class="demo-select-opt" data-value="1-300" role="option">1–300</li>
+              <li class="demo-select-opt" data-value="301-500" role="option">301–500</li>
+              <li class="demo-select-opt" data-value="501-1,000" role="option">501–1,000</li>
+              <li class="demo-select-opt" data-value="1,000+" role="option">More than 1,000</li>
+            </ul>
+            <input type="hidden" name="employees" id="demoEmployees" />
+          </div>
         </div>
         <div class="demo-privacy">
-          <label class="demo-privacy-label">
-            <input type="checkbox" id="demoPrivacy" name="privacy" required />
-            <span>By submitting this form, you acknowledge that you have read and agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.</span>
+          <label class="demo-privacy-label" for="demoPrivacy">
+            <span class="demo-cb-wrap">
+              <input type="checkbox" id="demoPrivacy" name="privacy" required />
+              <span class="demo-cb-box" aria-hidden="true">
+                <svg viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </span>
+            <span class="demo-privacy-text">By submitting this form, you acknowledge that you have read and agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.</span>
           </label>
           <span class="field-error" id="errPrivacy"></span>
         </div>

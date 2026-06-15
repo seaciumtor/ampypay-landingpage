@@ -695,7 +695,7 @@
     overlay.hidden = false;
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
-    overlay.querySelector('input:not([type=hidden]):not([style])').focus();
+    document.getElementById('demoEmail').focus();
   }
   function closeDemoModal() {
     overlay.hidden = true;
@@ -710,6 +710,37 @@
   demoClose.addEventListener('click', closeDemoModal);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDemoModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) closeDemoModal(); });
+
+  /* Custom employees dropdown */
+  const empSelect  = document.getElementById('employeesSelect');
+  const empInput   = document.getElementById('demoEmployees');
+  const empVal     = empSelect.querySelector('.demo-select-val');
+  const empBtn     = empSelect.querySelector('.demo-select-btn');
+  const empOpts    = empSelect.querySelectorAll('.demo-select-opt');
+
+  empBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = !empSelect.classList.contains('is-open');
+    empSelect.classList.toggle('is-open', open);
+    empSelect.setAttribute('aria-expanded', String(open));
+  });
+  empOpts.forEach((opt) => {
+    opt.addEventListener('click', () => {
+      empInput.value = opt.dataset.value;
+      empVal.textContent = opt.textContent;
+      empVal.classList.add('has-value');
+      empOpts.forEach(o => o.classList.remove('is-selected'));
+      opt.classList.add('is-selected');
+      empSelect.classList.remove('is-open');
+      empSelect.setAttribute('aria-expanded', 'false');
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!empSelect.contains(e.target)) {
+      empSelect.classList.remove('is-open');
+      empSelect.setAttribute('aria-expanded', 'false');
+    }
+  });
 
   function setError(id, msg) {
     const el = document.getElementById(id);
