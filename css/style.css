@@ -403,7 +403,9 @@ body::before {
   white-space: nowrap;
 }
 .float-chip em { font-style: normal; color: rgba(251, 251, 238, 0.6); }
-.chip-blockers { top: 154px; right: -97px; }
+/* Overhang up to 97px on wide screens, but tuck in to fit the gutter on smaller
+   desktops so the chip is never clipped by the hero's overflow: hidden. */
+.chip-blockers { top: 154px; right: calc(0px - min(97px, max(24px, (100vw - 1200px) / 2) - 8px)); }
 .chip-ai { bottom: calc(18% + 80px); left: -97px; }
 .chip-filed { bottom: 26px; right: calc(14% + 5px); color: #9DC0FF; }
 .chip-check { width: 16px; height: 16px; color: var(--blue); }
