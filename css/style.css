@@ -1036,17 +1036,21 @@ body::after {
   .why, .confidence, .compliance, .security { padding: 90px 0 80px; }
   .cta { padding: 120px 0 100px; }
   .float-chip { font-size: 0.74rem; padding: 10px 14px; }
+  .conf-head { margin-bottom: 56px; }
+  .comp-head { margin-bottom: 56px; }
+  .sec-head { margin-bottom: 56px; }
   .conf-badge { left: 8px; bottom: -14px; padding: 10px 14px 10px 10px; gap: 10px; }
   .conf-badge .ring-sm, .conf-badge .ring-sm svg { width: 56px; height: 56px; }
   .conf-badge .ring-num { font-size: 0.85rem; }
   .sec-stats { grid-template-columns: 1fr; }
-  .sec-stat { border-right: none; border-bottom: 1px solid var(--line-light); }
+  .sec-stat { border-right: none; border-bottom: 1px solid var(--line-light); gap: 4px; }
+  .sec-stat-label { line-height: 1.4; max-width: none; }
   .sec-stat:first-child { padding-left: 20px; }
   .sec-stat:last-child { border-bottom: none; }
   .hero-badges { gap: 10px; }
 
   /* Compact hero: every element visible within the first fold */
-  .hero { min-height: 85svh; padding: 64px 0 24px; }
+  .hero { min-height: 85svh; padding: calc(78px) 0 24px; }
   .hero-grid { gap: 20px; }
   .hero-eyebrow { margin-bottom: 24px; font-size: 0.7rem; }
   .hero-title { font-size: clamp(1.6rem, 9.5vw, 2.1rem); margin-bottom: 16px; }
