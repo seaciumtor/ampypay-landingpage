@@ -56,18 +56,25 @@ def init_db():
                 company    TEXT NOT NULL,
                 email      TEXT NOT NULL,
                 phone      TEXT,
+                job_title  TEXT,
+                employees  TEXT,
                 ip         TEXT,
                 created_at TEXT DEFAULT (datetime('now','localtime'))
             )
         """)
+        for col, typedef in [('job_title', 'TEXT'), ('employees', 'TEXT')]:
+            try:
+                conn.execute(f'ALTER TABLE submissions ADD COLUMN {col} {typedef}')
+            except Exception:
+                pass
         conn.commit()
 
-def insert_submission(name, company, email, phone, ip):
+def insert_submission(name, company, email, phone, ip, job_title='', employees=''):
     with _db_lock:
         with get_db() as conn:
             conn.execute(
-                "INSERT INTO submissions (name,company,email,phone,ip) VALUES (?,?,?,?,?)",
-                (name, company, email, phone or '', ip)
+                "INSERT INTO submissions (name,company,email,phone,job_title,employees,ip) VALUES (?,?,?,?,?,?,?)",
+                (name, company, email, phone or '', job_title or '', employees or '', ip)
             )
             conn.commit()
 
@@ -83,7 +90,7 @@ def recent_count_by_email(email):
 def get_all_submissions():
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT id,name,company,email,phone,ip,created_at "
+            "SELECT id,name,company,email,phone,job_title,employees,ip,created_at "
             "FROM submissions ORDER BY id DESC"
         ).fetchall()
         return [dict(r) for r in rows]
@@ -112,17 +119,50 @@ def send_email(to, subject, html):
     except Exception as e:
         print(f'[email error] {e}')
 
-def notify_admin(name, company, email, phone):
-    html = f"""
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
-      <h2 style="color:#111">New Demo Request</h2>
-      <table style="border-collapse:collapse;width:100%">
-        <tr><td style="padding:8px 12px;background:#f9fafb;font-weight:600">Name</td><td style="padding:8px 12px">{name}</td></tr>
-        <tr><td style="padding:8px 12px;font-weight:600">Company</td><td style="padding:8px 12px">{company}</td></tr>
-        <tr><td style="padding:8px 12px;background:#f9fafb;font-weight:600">Email</td><td style="padding:8px 12px"><a href="mailto:{email}">{email}</a></td></tr>
-        <tr><td style="padding:8px 12px;font-weight:600">Phone</td><td style="padding:8px 12px">{phone or '-'}</td></tr>
+def notify_admin(name, company, email, phone, job_title='', employees=''):
+    rows = [
+        ('Name',      name),
+        ('Company',   company),
+        ('Email',     f'<a href="mailto:{email}">{email}</a>'),
+        ('Phone',     phone or '-'),
+        ('Job Title', job_title or '-'),
+        ('Employees', employees or '-'),
+    ]
+    rows_html = ''.join(
+        f'<tr>'
+        f'<td style="padding:6px 16px 6px 0;font-size:14px;color:#6b7280;white-space:nowrap">{k}</td>'
+        f'<td style="padding:6px 0;font-size:14px;color:#111827;font-weight:500">{v}</td>'
+        f'</tr>'
+        for k, v in rows
+    )
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Demo Request</title>
+</head>
+<body style="margin:0;padding:0;background:#ffffff">
+  <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#0A1F44">
+    <div style="background:#0A1F44;padding:24px;text-align:center">
+      <img src="https://www.ampypay.com/assets/logos/logo.svg" alt="AmpyPay" width="140" style="display:inline-block;height:auto;max-width:140px">
+    </div>
+    <div style="padding:32px 24px">
+      <h2 style="margin:0 0 16px;font-size:18px">New Demo Request</h2>
+      <table style="border-collapse:collapse;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb;width:100%">
+        <tr><td style="padding:20px 24px">
+          <table cellpadding="0" cellspacing="0">{rows_html}</table>
+        </td></tr>
       </table>
-    </div>"""
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
+      <p style="font-size:13px;color:#6b7280">This is an automated notification from AmpyPay.</p>
+    </div>
+    <div style="background:#FBFBEE;padding:16px 24px;text-align:center;font-size:12px;color:#0A1F44">
+      © 2026 AmpyPay · This email was sent because you requested a demo.
+    </div>
+  </div>
+</body>
+</html>"""
     threading.Thread(
         target=send_email,
         args=(NOTIFY_EMAIL, f'[AmpyPay] New demo request — {name} ({company})', html),
@@ -130,22 +170,31 @@ def notify_admin(name, company, email, phone):
     ).start()
 
 def confirm_customer(name, company, email):
-    html = f"""
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#111">
-      <div style="background:#0a0a0a;padding:24px;text-align:center">
-        <span style="color:#fff;font-size:20px;font-weight:700;letter-spacing:0.04em">AmpyPay</span>
-      </div>
-      <div style="padding:32px 24px">
-        <h2 style="margin:0 0 8px">Thanks, {name}!</h2>
-        <p style="color:#4b5563">We've received your demo request from <strong>{company}</strong>.<br>
-        Our team will reach out within one business day to schedule your demo.</p>
-        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
-        <p style="font-size:13px;color:#6b7280">If you have any questions, just reply to this email.</p>
-      </div>
-      <div style="background:#f3f4f6;padding:16px 24px;text-align:center;font-size:12px;color:#9ca3af">
-        © 2024 AmpyPay · This email was sent because you requested a demo.
-      </div>
-    </div>"""
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AmpyPay – Demo Request Confirmation</title>
+</head>
+<body style="margin:0;padding:0;background:#ffffff">
+  <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#0A1F44">
+    <div style="background:#0A1F44;padding:24px;text-align:center">
+      <img src="https://www.ampypay.com/assets/logos/logo.svg" alt="AmpyPay" width="140" style="display:inline-block;height:auto;max-width:140px">
+    </div>
+    <div style="padding:32px 24px">
+      <h2 style="margin:0 0 8px">Thanks, {name}!</h2>
+      <p style="color:#0A1F44">We've received your demo request from <strong>{company}</strong>.<br>
+      Our team will reach out within one business day to schedule your demo.</p>
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
+      <p style="font-size:13px;color:#6b7280">If you have any questions, just reply to this email.</p>
+    </div>
+    <div style="background:#FBFBEE;padding:16px 24px;text-align:center;font-size:12px;color:#0A1F44">
+      © 2026 AmpyPay · This email was sent because you requested a demo.
+    </div>
+  </div>
+</body>
+</html>"""
     threading.Thread(
         target=send_email,
         args=(email, 'Your AmpyPay demo request is confirmed', html),
@@ -164,10 +213,12 @@ def admin_html(rows):
           <td>{r['company']}</td>
           <td><a href="mailto:{r['email']}">{r['email']}</a></td>
           <td>{r['phone'] or '-'}</td>
+          <td>{r.get('job_title') or '-'}</td>
+          <td>{r.get('employees') or '-'}</td>
           <td style="font-size:12px;color:#6b7280">{r['ip'] or '-'}</td>
         </tr>"""
     if not rows_html:
-        rows_html = '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:32px">No submissions yet.</td></tr>'
+        rows_html = '<tr><td colspan="9" style="text-align:center;color:#9ca3af;padding:32px">No submissions yet.</td></tr>'
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -178,10 +229,10 @@ def admin_html(rows):
   header{{background:#0a0a0a;color:#fff;padding:16px 24px;display:flex;align-items:center;gap:16px}}
   header h1{{margin:0;font-size:18px;font-weight:700}}
   header span{{font-size:13px;opacity:.5}}
-  main{{padding:24px}}
+  main{{padding:24px;overflow-x:auto}}
   .count{{font-size:14px;color:#6b7280;margin-bottom:12px}}
   table{{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}}
-  th{{background:#f3f4f6;padding:10px 14px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280}}
+  th{{background:#f3f4f6;padding:10px 14px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;white-space:nowrap}}
   td{{padding:10px 14px;border-top:1px solid #f3f4f6;font-size:14px}}
   tr:hover td{{background:#fafafa}}
   a{{color:#3b82f6}}
@@ -192,7 +243,7 @@ def admin_html(rows):
 <main>
   <p class="count">{len(rows)} submission(s) total</p>
   <table>
-    <thead><tr><th>#</th><th>Date</th><th>Name</th><th>Company</th><th>Email</th><th>Phone</th><th>IP</th></tr></thead>
+    <thead><tr><th>#</th><th>Date</th><th>Name</th><th>Company</th><th>Email</th><th>Phone</th><th>Job Title</th><th>Employees</th><th>IP</th></tr></thead>
     <tbody>{rows_html}</tbody>
   </table>
 </main>
@@ -285,11 +336,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self._json(400, {'error': 'Invalid JSON'})
             return
 
-        name    = (body.get('name') or '').strip()
-        company = (body.get('company') or '').strip()
-        email   = (body.get('email') or '').strip()
-        phone   = (body.get('phone') or '').strip()
-        hp      = body.get('_hp', '')
+        name      = (body.get('name') or '').strip()
+        company   = (body.get('company') or '').strip()
+        email     = (body.get('email') or '').strip()
+        phone     = (body.get('phone') or '').strip()
+        job_title = (body.get('job_title') or '').strip()
+        employees = (body.get('employees') or '').strip()
+        hp        = body.get('_hp', '')
 
         if hp:
             self._json(200, {'ok': True})
@@ -305,8 +358,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
 
         ip = self.headers.get('X-Forwarded-For', self.client_address[0])
-        insert_submission(name, company, email, phone, ip)
-        notify_admin(name, company, email, phone)
+        insert_submission(name, company, email, phone, ip, job_title, employees)
+        notify_admin(name, company, email, phone, job_title, employees)
         confirm_customer(name, company, email)
         self._json(200, {'ok': True})
 
@@ -331,7 +384,7 @@ if __name__ == '__main__':
         DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 
     init_db()
-    server = http.server.HTTPServer(('0.0.0.0', PORT), Handler)
+    server = http.server.ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
     print(f'AmpyPay running on http://0.0.0.0:{PORT}')
     print(f'Admin: http://localhost:{PORT}/admin?token={ADMIN_TOKEN}')
     try:

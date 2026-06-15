@@ -692,13 +692,27 @@
   const demoSubmit  = document.getElementById('demoSubmit');
 
   function openDemoModal() {
+    const scrollY = window.scrollY;
     overlay.hidden = false;
-    document.body.style.overflow = 'hidden';
-    overlay.querySelector('input:not([type=hidden]):not([style])').focus();
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    document.body.dataset.scrollY = scrollY;
+    if (lenis) lenis.destroy();
+    document.getElementById('demoEmail').focus();
   }
   function closeDemoModal() {
+    const scrollY = parseInt(document.body.dataset.scrollY || '0', 10);
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollY);
     overlay.hidden = true;
-    document.body.style.overflow = '';
+    if (lenis) {
+      lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+    }
   }
 
   document.querySelectorAll('[data-demo]').forEach((el) => {
@@ -706,15 +720,57 @@
   });
 
   demoClose.addEventListener('click', closeDemoModal);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDemoModal(); });
+  // overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDemoModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) closeDemoModal(); });
+
+  /* Custom employees dropdown */
+  const empSelect  = document.getElementById('employeesSelect');
+  const empInput   = document.getElementById('demoEmployees');
+  const empVal     = empSelect.querySelector('.demo-select-val');
+  const empBtn     = empSelect.querySelector('.demo-select-btn');
+  const empOpts    = empSelect.querySelectorAll('.demo-select-opt');
+
+  // default to first option
+  empOpts[0].classList.add('is-selected');
+  empInput.value = empOpts[0].dataset.value;
+  empVal.textContent = empOpts[0].textContent;
+  empVal.classList.add('has-value');
+
+  empBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = !empSelect.classList.contains('is-open');
+    if (open) {
+      const rect = empSelect.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      empSelect.classList.toggle('is-dropup', spaceBelow < 260);
+    }
+    empSelect.classList.toggle('is-open', open);
+    empSelect.setAttribute('aria-expanded', String(open));
+  });
+  empOpts.forEach((opt) => {
+    opt.addEventListener('click', () => {
+      empInput.value = opt.dataset.value;
+      empVal.textContent = opt.textContent;
+      empVal.classList.add('has-value');
+      empOpts.forEach(o => o.classList.remove('is-selected'));
+      opt.classList.add('is-selected');
+      empSelect.classList.remove('is-open');
+      empSelect.setAttribute('aria-expanded', 'false');
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!empSelect.contains(e.target)) {
+      empSelect.classList.remove('is-open');
+      empSelect.setAttribute('aria-expanded', 'false');
+    }
+  });
 
   function setError(id, msg) {
     const el = document.getElementById(id);
     if (el) el.textContent = msg;
   }
   function clearErrors() {
-    ['errName','errCompany','errEmail','errGlobal'].forEach(id => setError(id, ''));
+    ['errName','errCompany','errEmail','errPhone','errGlobal'].forEach(id => setError(id, ''));
     demoForm.querySelectorAll('.is-error').forEach(el => el.classList.remove('is-error'));
   }
 
@@ -722,32 +778,39 @@
     e.preventDefault();
     clearErrors();
 
-    const name    = document.getElementById('demoName').value.trim();
-    const company = document.getElementById('demoCompany').value.trim();
-    const email   = document.getElementById('demoEmail').value.trim();
-    const phone   = document.getElementById('demoPhone').value.trim();
-    const hp      = demoForm.querySelector('[name="_hp"]').value;
+    const email     = document.getElementById('demoEmail').value.trim();
+    const phone     = document.getElementById('demoPhone').value.trim();
+    const name      = document.getElementById('demoName').value.trim();
+    const jobTitle  = document.getElementById('demoJobTitle').value.trim();
+    const company   = document.getElementById('demoCompany').value.trim();
+    const employees = document.getElementById('demoEmployees').value;
+    const hp        = demoForm.querySelector('[name="_hp"]').value;
 
     let valid = true;
-    if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }
-    if (!company) { setError('errCompany', 'Required'); document.getElementById('demoCompany').classList.add('is-error'); valid = false; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('errEmail', 'Valid email required');
       document.getElementById('demoEmail').classList.add('is-error');
       valid = false;
     }
+    if (!phone) { setError('errPhone', 'Required'); document.getElementById('demoPhone').classList.add('is-error'); valid = false; }
+    if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }
+    if (!company) { setError('errCompany', 'Required'); document.getElementById('demoCompany').classList.add('is-error'); valid = false; }
     if (!valid) return;
 
     demoSubmit.disabled = true;
     demoSubmit.textContent = 'Sending…';
 
+    const payload = JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp });
     try {
-      const res = await fetch(DEMO_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, company, email, phone, _hp: hp }),
-      });
-      const data = await res.json();
+      let res, data;
+      for (let attempt = 0; attempt <= 2; attempt++) {
+        if (attempt > 0) await new Promise(r => setTimeout(r, 700 * attempt));
+        try {
+          res = await fetch(DEMO_API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload });
+          if (res.status < 500) break;
+        } catch { if (attempt === 2) throw new Error('network'); }
+      }
+      data = await res.json();
       if (!res.ok) {
         setError('errGlobal', data.error || 'Something went wrong. Please try again.');
         demoSubmit.disabled = false;
