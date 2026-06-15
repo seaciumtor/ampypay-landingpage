@@ -692,15 +692,27 @@
   const demoSubmit  = document.getElementById('demoSubmit');
 
   function openDemoModal() {
+    const scrollY = window.scrollY;
     overlay.hidden = false;
-    document.body.style.overflow = 'hidden';
-    if (lenis) lenis.stop();
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    document.body.dataset.scrollY = scrollY;
+    if (lenis) lenis.destroy();
     document.getElementById('demoEmail').focus();
   }
   function closeDemoModal() {
+    const scrollY = parseInt(document.body.dataset.scrollY || '0', 10);
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollY);
     overlay.hidden = true;
-    document.body.style.overflow = '';
-    if (lenis) lenis.start();
+    if (lenis) {
+      lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+    }
   }
 
   document.querySelectorAll('[data-demo]').forEach((el) => {
@@ -708,7 +720,7 @@
   });
 
   demoClose.addEventListener('click', closeDemoModal);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDemoModal(); });
+  // overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDemoModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) closeDemoModal(); });
 
   /* Custom employees dropdown */
@@ -718,9 +730,20 @@
   const empBtn     = empSelect.querySelector('.demo-select-btn');
   const empOpts    = empSelect.querySelectorAll('.demo-select-opt');
 
+  // default to first option
+  empOpts[0].classList.add('is-selected');
+  empInput.value = empOpts[0].dataset.value;
+  empVal.textContent = empOpts[0].textContent;
+  empVal.classList.add('has-value');
+
   empBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     const open = !empSelect.classList.contains('is-open');
+    if (open) {
+      const rect = empSelect.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      empSelect.classList.toggle('is-dropup', spaceBelow < 260);
+    }
     empSelect.classList.toggle('is-open', open);
     empSelect.setAttribute('aria-expanded', String(open));
   });
