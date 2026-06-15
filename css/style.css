@@ -852,7 +852,7 @@ body::after {
 .cta-status-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .dot-live { background: #1DE2A7; box-shadow: 0 0 6px 2px #1DE2A7; }
 .dot-ready { background: #6BA9FF; box-shadow: 0 0 6px 2px #6BA9FF; }
-.cta-shot { max-width: 840px; margin-top: 72px; width: 100%; }
+.cta-shot { max-width: 840px; margin-top: 72px; width: 100%; margin-left: -25px; }
 .cta-shot img { width: 100%; height: auto; }
 
 /* ============ Demo Modal ============ */
@@ -1006,6 +1006,7 @@ body::after {
   .conf-badge .ring-num { font-size: 0.85rem; }
   .sec-stats { grid-template-columns: 1fr; }
   .sec-stat { border-right: none; border-bottom: 1px solid var(--line-light); }
+  .sec-stat:first-child { padding-left: 20px; }
   .sec-stat:last-child { border-bottom: none; }
   .hero-badges { gap: 10px; }
 
