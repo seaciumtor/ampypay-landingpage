@@ -1126,7 +1126,7 @@ body::before {
   /* Compact hero: every element visible within the first fold */
   .hero { min-height: 85svh; padding: calc(78px) 0 24px; }
   .hero-grid { gap: 20px; }
-  .hero-eyebrow { margin-bottom: 24px; font-size: 0.7rem; }
+  .hero-eyebrow { margin-top: 16px; margin-bottom: 24px; font-size: 0.7rem; }
   .hero-title { font-size: clamp(1.6rem, 9.5vw, 2.1rem); margin-bottom: 16px; }
   .hero-sub { font-size: clamp(1rem, 1.4vw, 1.15rem); margin-bottom: 32px; }
   .hero-ctas { gap: 10px; margin-bottom: 16px; }
