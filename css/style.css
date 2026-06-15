@@ -863,10 +863,14 @@ body::after {
   position: fixed; inset: 0; z-index: 9000;
   background: rgba(7, 23, 55, 0.82);
   backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 32px 20px 48px;
+  overflow-y: auto; overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   animation: overlayIn 0.22s ease;
 }
+.demo-overlay::-webkit-scrollbar { display: none; }
 .demo-overlay[hidden] { display: none; }
 @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -874,11 +878,10 @@ body::after {
   background: var(--navy-deep);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 20px;
-  padding: 40px 44px 44px;
-  width: 100%; max-width: 560px;
+  padding: 36px 36px 40px;
+  width: 100%; max-width: 520px;
   position: relative;
   animation: modalIn 0.26s cubic-bezier(0.34,1.56,0.64,1);
-  max-height: 90vh; overflow-y: auto;
 }
 @keyframes modalIn { from { opacity: 0; transform: scale(0.94) translateY(16px); } to { opacity: 1; transform: none; } }
 
@@ -890,13 +893,13 @@ body::after {
 }
 .demo-close:hover { color: var(--cream); }
 
-.demo-modal-head { margin-bottom: 28px; }
+.demo-modal-head { margin-bottom: 20px; }
 .demo-modal .eyebrow { color: #3D7DFF; }
 .demo-modal .eyebrow-line { background: #3D7DFF; }
 .demo-title { font-size: 1.55rem; font-weight: 700; color: var(--cream); margin: 8px 0 6px; }
 .demo-subtitle { font-size: 0.88rem; color: rgba(251,251,238,0.55); }
 
-.demo-form { display: flex; flex-direction: column; gap: 18px; }
+.demo-form { display: flex; flex-direction: column; gap: 14px; }
 .demo-form[hidden], .demo-success[hidden] { display: none; }
 .demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 520px) { .demo-row { grid-template-columns: 1fr; } }
@@ -953,28 +956,10 @@ body::after {
   border-radius: 50%; background: #6E96F5; flex-shrink: 0;
 }
 
-/* Custom checkbox */
-.demo-privacy { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
-.demo-privacy-label { display: flex; align-items: flex-start; gap: 11px; cursor: pointer; }
-.demo-cb-wrap { position: relative; flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; }
-.demo-cb-wrap input[type="checkbox"] {
-  position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%;
-  cursor: pointer; margin: 0;
+.demo-privacy-note {
+  font-size: 0.75rem; color: rgba(251,251,238,0.38);
+  line-height: 1.5; margin-top: 2px;
 }
-.demo-cb-box {
-  width: 18px; height: 18px; border-radius: 5px;
-  border: 1.5px solid rgba(255,255,255,0.22);
-  background: rgba(255,255,255,0.05);
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.18s, border-color 0.18s;
-  pointer-events: none;
-}
-.demo-cb-box svg { width: 11px; height: 9px; color: #fff; opacity: 0; transform: scale(0.5); transition: opacity 0.15s, transform 0.15s; }
-.demo-cb-wrap input:checked ~ .demo-cb-box { background: var(--blue); border-color: var(--blue); }
-.demo-cb-wrap input:checked ~ .demo-cb-box svg { opacity: 1; transform: scale(1); }
-.demo-cb-wrap input:focus-visible ~ .demo-cb-box { outline: 2px solid var(--blue); outline-offset: 2px; }
-.demo-privacy-text { font-size: 0.78rem; color: rgba(251,251,238,0.5); line-height: 1.55; }
-.demo-privacy-text a { color: #6E96F5; text-decoration: underline; text-underline-offset: 2px; }
 
 .field-error { font-size: 0.78rem; color: #f87171; min-height: 1em; }
 
