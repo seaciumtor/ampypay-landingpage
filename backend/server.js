@@ -15,10 +15,13 @@ const PORT = process.env.PORT || 3001;
 app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-const _allowedOrigins = (process.env.ALLOWED_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
+const _allowedOrigins = new Set([
+  'https://www.ampypay.com',
+  ...((process.env.ALLOWED_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean)),
+]);
 app.use(cors({
-  origin: _allowedOrigins.length === 0 ? '*' : (origin, cb) => {
-    if (!origin || _allowedOrigins.includes(origin)) return cb(null, true);
+  origin: (origin, cb) => {
+    if (!origin || _allowedOrigins.has(origin)) return cb(null, true);
     cb(new Error('Not allowed by CORS'));
   },
   credentials: true,
