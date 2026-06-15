@@ -684,7 +684,7 @@
      ============================================================ */
   const BACKEND = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3001'
-    : '';
+    : 'https://RAILWAY_URL_HERE';
   const DEMO_API = BACKEND + '/api/demo';
 
   const overlay   = document.getElementById('demoOverlay');
