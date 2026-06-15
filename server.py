@@ -13,6 +13,7 @@ Routes:
 
 import http.server
 import json
+import socketserver
 import mimetypes
 import os
 import re
@@ -22,6 +23,9 @@ import threading
 import urllib.parse
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+class ThreadingHTTPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
+    daemon_threads = True
 
 # ── Config ────────────────────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -384,7 +388,7 @@ if __name__ == '__main__':
         DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 
     init_db()
-    server = http.server.ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
+    server = ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
     print(f'AmpyPay running on http://0.0.0.0:{PORT}')
     print(f'Admin: http://localhost:{PORT}/admin?token={ADMIN_TOKEN}')
     try:
