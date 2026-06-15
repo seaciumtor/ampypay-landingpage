@@ -1035,6 +1035,7 @@ body::after {
   .container { width: calc(100% - 40px); }
   .why, .confidence, .compliance, .security { padding: 90px 0 80px; }
   .cta { padding: 120px 0 100px; }
+  .cta-shot { margin-left: 0; }
   .float-chip { font-size: 0.74rem; padding: 10px 14px; }
   .conf-head { margin-bottom: 56px; }
   .comp-head { margin-bottom: 56px; }
