@@ -968,8 +968,8 @@ body::after {
      mid-left edge / bottom-right. Zones are vertically disjoint by >8px
      even with the ±12px idle-float drift, and hug the bezel edges so the
      core dashboard UI stays clear. */
-  .chip-blockers { top: 28%; right: 2%; }
-  .chip-ai { bottom: 33%; left: -3%; }
+  .chip-blockers { top: calc(28% + 35px); right: 2%; }
+  .chip-ai { bottom: calc(33% - 20px); left: -3%; }
   .chip-filed { bottom: 2%; right: 24%; }
   .scroll-hint { display: none; }
 
@@ -1011,14 +1011,15 @@ body::after {
   .hero-badges { gap: 10px; }
 
   /* Compact hero: every element visible within the first fold */
-  .hero { min-height: 85svh; padding: calc(var(--nav-h) + 10px) 0 24px; }
+  .hero { min-height: 85svh; padding: 64px 0 24px; }
   .hero-grid { gap: 20px; }
-  .hero-eyebrow { margin-bottom: 12px; font-size: 0.7rem; }
-  .hero-title { font-size: clamp(1.55rem, 7vw, 2.3rem); margin-bottom: 10px; }
-  .hero-sub { font-size: 0.92rem; margin-bottom: 14px; }
-  .hero-ctas { gap: 10px; margin-bottom: 14px; }
+  .hero-eyebrow { margin-bottom: 24px; font-size: 0.7rem; }
+  .hero-title { font-size: clamp(1.6rem, 9.5vw, 2.1rem); margin-bottom: 16px; }
+  .hero-sub { font-size: clamp(1rem, 1.4vw, 1.15rem); margin-bottom: 32px; }
+  .hero-ctas { gap: 10px; margin-bottom: 16px; }
   .hero-ctas .btn { padding: 12px 20px; font-size: 0.88rem; }
   .hero-visual { max-width: min(100%, 42svh); }
+  .hero-shot { margin-top: 12px; }
   .float-chip { font-size: 0.68rem; padding: 8px 12px; }
 }
 
