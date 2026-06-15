@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """
-AmpyPay demo-request backend — stdlib only, no pip install needed.
-Endpoints:
-  POST /api/demo        — save submission, send emails
-  GET  /admin           — view submissions (password via ?token=)
-  GET  /admin/data      — JSON list (same auth)
+AmpyPay all-in-one server — stdlib only, no pip install needed.
+Serves static frontend AND handles API/admin on a single port.
+
+Routes:
+  GET  /              → index.html
+  GET  /css/*, /js/*, /assets/*  → static files
+  POST /api/demo      → save submission, send emails
+  GET  /admin         → view submissions (?token=)
+  GET  /admin/data    → JSON list (?token=)
 """
 
 import http.server
 import json
+import mimetypes
 import os
 import re
 import smtplib
@@ -17,23 +22,24 @@ import threading
 import urllib.parse
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
 
-# ── Config ──────────────────────────────────────────────────────────────────
+# ── Config ────────────────────────────────────────────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def _env(key, default=''):
     return os.environ.get(key, default)
 
-PORT        = int(_env('PORT', '3001'))
-SMTP_HOST   = _env('SMTP_HOST', 'mail.eunite.com')
-SMTP_PORT   = int(_env('SMTP_PORT', '25'))
-SMTP_SECURE = _env('SMTP_SECURE', 'false').lower() == 'true'
-SMTP_USER   = _env('SMTP_USER', 'noreply@eunite.com')
-SMTP_PASS   = _env('SMTP_PASS', '')
-NOTIFY_EMAIL= _env('NOTIFY_EMAIL', 'admin@eunite.com')
-ADMIN_TOKEN = _env('ADMIN_TOKEN', 'changeme')
-DB_PATH     = _env('DB_PATH', 'demo_submissions.db')
+PORT         = int(_env('PORT', '3001'))
+SMTP_HOST    = _env('SMTP_HOST', 'mail.eunite.com')
+SMTP_PORT    = int(_env('SMTP_PORT', '25'))
+SMTP_SECURE  = _env('SMTP_SECURE', 'false').lower() == 'true'
+SMTP_USER    = _env('SMTP_USER', 'noreply@eunite.com')
+SMTP_PASS    = _env('SMTP_PASS', '')
+NOTIFY_EMAIL = _env('NOTIFY_EMAIL', 'admin@eunite.com')
+ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
+DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 
-# ── Database ─────────────────────────────────────────────────────────────────
+# ── Database ──────────────────────────────────────────────────────────────────
 _db_lock = threading.Lock()
 
 def get_db():
@@ -45,12 +51,12 @@ def init_db():
     with get_db() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS submissions (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                name      TEXT NOT NULL,
-                company   TEXT NOT NULL,
-                email     TEXT NOT NULL,
-                phone     TEXT,
-                ip        TEXT,
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                name       TEXT NOT NULL,
+                company    TEXT NOT NULL,
+                email      TEXT NOT NULL,
+                phone      TEXT,
+                ip         TEXT,
                 created_at TEXT DEFAULT (datetime('now','localtime'))
             )
         """)
@@ -68,7 +74,8 @@ def insert_submission(name, company, email, phone, ip):
 def recent_count_by_email(email):
     with get_db() as conn:
         row = conn.execute(
-            "SELECT COUNT(*) AS c FROM submissions WHERE email=? AND created_at >= datetime('now','-30 minutes','localtime')",
+            "SELECT COUNT(*) AS c FROM submissions WHERE email=? "
+            "AND created_at >= datetime('now','-30 minutes','localtime')",
             (email,)
         ).fetchone()
         return row['c'] if row else 0
@@ -76,11 +83,12 @@ def recent_count_by_email(email):
 def get_all_submissions():
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT id,name,company,email,phone,ip,created_at FROM submissions ORDER BY id DESC"
+            "SELECT id,name,company,email,phone,ip,created_at "
+            "FROM submissions ORDER BY id DESC"
         ).fetchall()
         return [dict(r) for r in rows]
 
-# ── Email ────────────────────────────────────────────────────────────────────
+# ── Email ─────────────────────────────────────────────────────────────────────
 def send_email(to, subject, html):
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
@@ -100,10 +108,8 @@ def send_email(to, subject, html):
             s.login(SMTP_USER, SMTP_PASS)
         s.sendmail(SMTP_USER, [to], msg.as_bytes())
         s.quit()
-        return True
     except Exception as e:
         print(f'[email error] {e}')
-        return False
 
 def notify_admin(name, company, email, phone):
     html = f"""
@@ -115,8 +121,7 @@ def notify_admin(name, company, email, phone):
         <tr><td style="padding:8px 12px;background:#f9fafb;font-weight:600">Email</td><td style="padding:8px 12px"><a href="mailto:{email}">{email}</a></td></tr>
         <tr><td style="padding:8px 12px;font-weight:600">Phone</td><td style="padding:8px 12px">{phone or '-'}</td></tr>
       </table>
-    </div>
-    """
+    </div>"""
     threading.Thread(
         target=send_email,
         args=(NOTIFY_EMAIL, f'[AmpyPay] New demo request — {name} ({company})', html),
@@ -139,16 +144,15 @@ def confirm_customer(name, company, email):
       <div style="background:#f3f4f6;padding:16px 24px;text-align:center;font-size:12px;color:#9ca3af">
         © 2024 AmpyPay · This email was sent because you requested a demo.
       </div>
-    </div>
-    """
+    </div>"""
     threading.Thread(
         target=send_email,
         args=(email, 'Your AmpyPay demo request is confirmed', html),
         daemon=True
     ).start()
 
-# ── Admin HTML ───────────────────────────────────────────────────────────────
-def admin_html(rows, token):
+# ── Admin HTML ────────────────────────────────────────────────────────────────
+def admin_html(rows):
     rows_html = ''
     for r in rows:
         rows_html += f"""
@@ -161,6 +165,8 @@ def admin_html(rows, token):
           <td>{r['phone'] or '-'}</td>
           <td style="font-size:12px;color:#6b7280">{r['ip'] or '-'}</td>
         </tr>"""
+    if not rows_html:
+        rows_html = '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:32px">No submissions yet.</td></tr>'
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -181,20 +187,40 @@ def admin_html(rows, token):
 </style>
 </head>
 <body>
-<header>
-  <h1>AmpyPay</h1>
-  <span>Demo Submissions</span>
-</header>
+<header><h1>AmpyPay</h1><span>Demo Submissions</span></header>
 <main>
   <p class="count">{len(rows)} submission(s) total</p>
   <table>
     <thead><tr><th>#</th><th>Date</th><th>Name</th><th>Company</th><th>Email</th><th>Phone</th><th>IP</th></tr></thead>
-    <tbody>{rows_html if rows_html else '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:32px">No submissions yet.</td></tr>'}</tbody>
+    <tbody>{rows_html}</tbody>
   </table>
 </main>
 </body></html>"""
 
-# ── Request Handler ──────────────────────────────────────────────────────────
+# ── Static file serving ───────────────────────────────────────────────────────
+def serve_static(handler, path):
+    # map / → index.html
+    if path == '/':
+        path = '/index.html'
+    file_path = os.path.join(BASE_DIR, path.lstrip('/'))
+    # prevent directory traversal
+    if not os.path.abspath(file_path).startswith(BASE_DIR):
+        handler._json(403, {'error': 'Forbidden'})
+        return
+    if not os.path.isfile(file_path):
+        handler._html(404, '<h2>404 Not Found</h2>')
+        return
+    mime, _ = mimetypes.guess_type(file_path)
+    mime = mime or 'application/octet-stream'
+    with open(file_path, 'rb') as f:
+        body = f.read()
+    handler.send_response(200)
+    handler.send_header('Content-Type', mime)
+    handler.send_header('Content-Length', str(len(body)))
+    handler.end_headers()
+    handler.wfile.write(body)
+
+# ── Request Handler ───────────────────────────────────────────────────────────
 class Handler(http.server.BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         print(f'[{self.address_string()}] {fmt % args}')
@@ -228,70 +254,64 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
-        qs = urllib.parse.parse_qs(parsed.query)
-        token = qs.get('token', [''])[0]
+        qs     = urllib.parse.parse_qs(parsed.query)
+        token  = qs.get('token', [''])[0]
+        path   = parsed.path
 
-        if parsed.path == '/admin':
+        if path == '/admin':
             if token != ADMIN_TOKEN:
                 self._html(401, '<h2>401 Unauthorized — add ?token=YOUR_TOKEN to the URL</h2>')
                 return
-            rows = get_all_submissions()
-            self._html(200, admin_html(rows, token))
-
-        elif parsed.path == '/admin/data':
+            self._html(200, admin_html(get_all_submissions()))
+        elif path == '/admin/data':
             if token != ADMIN_TOKEN:
                 self._json(401, {'error': 'Unauthorized'})
                 return
             self._json(200, get_all_submissions())
-
         else:
-            self._json(404, {'error': 'Not found'})
+            serve_static(self, path)
 
     def do_POST(self):
         parsed = urllib.parse.urlparse(self.path)
-
-        if parsed.path == '/api/demo':
-            length = int(self.headers.get('Content-Length', 0))
-            try:
-                body = json.loads(self.rfile.read(length))
-            except Exception:
-                self._json(400, {'error': 'Invalid JSON'})
-                return
-
-            name    = (body.get('name') or '').strip()
-            company = (body.get('company') or '').strip()
-            email   = (body.get('email') or '').strip()
-            phone   = (body.get('phone') or '').strip()
-            hp      = body.get('_hp', '')
-
-            # honeypot
-            if hp:
-                self._json(200, {'ok': True})
-                return
-
-            if not name or not company or not email:
-                self._json(400, {'error': 'Name, company and email are required.'})
-                return
-            if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
-                self._json(400, {'error': 'Invalid email address.'})
-                return
-            if recent_count_by_email(email) >= 3:
-                self._json(429, {'error': 'This email already has a pending request. We will be in touch.'})
-                return
-
-            ip = self.headers.get('X-Forwarded-For', self.client_address[0])
-            insert_submission(name, company, email, phone, ip)
-            notify_admin(name, company, email, phone)
-            confirm_customer(name, company, email)
-
-            self._json(200, {'ok': True})
-        else:
+        if parsed.path != '/api/demo':
             self._json(404, {'error': 'Not found'})
+            return
 
-# ── Main ─────────────────────────────────────────────────────────────────────
+        length = int(self.headers.get('Content-Length', 0))
+        try:
+            body = json.loads(self.rfile.read(length))
+        except Exception:
+            self._json(400, {'error': 'Invalid JSON'})
+            return
+
+        name    = (body.get('name') or '').strip()
+        company = (body.get('company') or '').strip()
+        email   = (body.get('email') or '').strip()
+        phone   = (body.get('phone') or '').strip()
+        hp      = body.get('_hp', '')
+
+        if hp:
+            self._json(200, {'ok': True})
+            return
+        if not name or not company or not email:
+            self._json(400, {'error': 'Name, company and email are required.'})
+            return
+        if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+            self._json(400, {'error': 'Invalid email address.'})
+            return
+        if recent_count_by_email(email) >= 3:
+            self._json(429, {'error': 'This email already has a pending request. We will be in touch.'})
+            return
+
+        ip = self.headers.get('X-Forwarded-For', self.client_address[0])
+        insert_submission(name, company, email, phone, ip)
+        notify_admin(name, company, email, phone)
+        confirm_customer(name, company, email)
+        self._json(200, {'ok': True})
+
+# ── Main ──────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    # Load .env if present
-    env_path = os.path.join(os.path.dirname(__file__), '.env')
+    env_path = os.path.join(BASE_DIR, '.env')
     if os.path.exists(env_path):
         with open(env_path) as f:
             for line in f:
@@ -299,7 +319,7 @@ if __name__ == '__main__':
                 if line and not line.startswith('#') and '=' in line:
                     k, v = line.split('=', 1)
                     os.environ.setdefault(k.strip(), v.strip())
-        # Re-read after loading .env
+        PORT         = int(_env('PORT', '3001'))
         SMTP_HOST    = _env('SMTP_HOST', 'mail.eunite.com')
         SMTP_PORT    = int(_env('SMTP_PORT', '25'))
         SMTP_SECURE  = _env('SMTP_SECURE', 'false').lower() == 'true'
@@ -307,12 +327,12 @@ if __name__ == '__main__':
         SMTP_PASS    = _env('SMTP_PASS', '')
         NOTIFY_EMAIL = _env('NOTIFY_EMAIL', 'admin@eunite.com')
         ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
-        DB_PATH      = _env('DB_PATH', 'demo_submissions.db')
+        DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 
     init_db()
     server = http.server.HTTPServer(('0.0.0.0', PORT), Handler)
-    print(f'AmpyPay backend running on http://0.0.0.0:{PORT}')
-    print(f'Admin panel: http://localhost:{PORT}/admin?token={ADMIN_TOKEN}')
+    print(f'AmpyPay running on http://0.0.0.0:{PORT}')
+    print(f'Admin: http://localhost:{PORT}/admin?token={ADMIN_TOKEN}')
     try:
         server.serve_forever()
     except KeyboardInterrupt:
