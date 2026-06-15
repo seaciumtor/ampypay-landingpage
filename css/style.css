@@ -1066,7 +1066,7 @@ body::before {
   .nav-links { display: none; }
   .nav-burger { display: flex; }
   .nav-actions .btn { display: none; }
-  .nav-actions .mobile-cta { display: inline-flex; }
+  .nav-actions .mobile-cta { display: inline-flex; padding: 4px 16px;}
 
   .hero { padding-bottom: 72px; }
   .hero-grid { grid-template-columns: 1fr; gap: 72px; }
