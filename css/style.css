@@ -1107,6 +1107,7 @@ body::before {
   .conf-head { margin-bottom: 56px; }
   .comp-head { margin-bottom: 56px; }
   .sec-head { margin-bottom: 56px; }
+  .conf-cards { grid-template-columns: none; }
   .conf-badge { left: 8px; bottom: -14px; padding: 10px 14px 10px 10px; gap: 10px; }
   .conf-badge .ring-sm, .conf-badge .ring-sm svg { width: 56px; height: 56px; }
   .conf-badge .ring-num { font-size: 0.85rem; }
