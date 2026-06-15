@@ -272,6 +272,7 @@ body::before {
 .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
 
 .nav-actions { display: flex; align-items: center; gap: 16px; }
+.nav-actions .mobile-cta { display: none; }
 .nav-burger {
   display: none;
   flex-direction: column; gap: 6px;
@@ -297,9 +298,7 @@ body::before {
   padding: 10px 0;
   border-bottom: 1px solid var(--line-light);
 }
-.mobile-menu nav a.mobile-cta { color: var(--blue); border-bottom: none; }
-.mobile-tag { margin-top: 40px; color: rgba(251, 251, 238, 0.5); font-size: 0.95rem; }
-
+.mobile-menu nav a:last-child { border-bottom: none; }
 /* ============ Hero ============ */
 .hero {
   position: relative;
@@ -524,13 +523,16 @@ body::before {
 .exc-shot-back, .exc-shot-front {
   position: relative;
   width: 100%; height: auto;
-  filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.45));
+  filter: none;
 }
+/* Apply the drop-shadow only once the image has loaded — otherwise the
+   reserved (empty) box casts a phantom rectangular shadow during load. */
+.exc-shot-back.is-loaded { filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.45)); }
 .exc-shot-back { width: 88%; }
 .exc-shot-front {
   width: 64%; margin: -26% 0 0 auto; display: block;
-  filter: drop-shadow(0 32px 60px rgba(0, 0, 0, 0.55));
 }
+.exc-shot-front.is-loaded { filter: drop-shadow(0 32px 60px rgba(0, 0, 0, 0.55)); }
 .exc-note {
   margin-top: 28px; padding-left: 18px;
   border-left: 3px solid var(--blue);
@@ -1064,6 +1066,7 @@ body::before {
   .nav-links { display: none; }
   .nav-burger { display: flex; }
   .nav-actions .btn { display: none; }
+  .nav-actions .mobile-cta { display: inline-flex; }
 
   .hero { padding-bottom: 72px; }
   .hero-grid { grid-template-columns: 1fr; gap: 72px; }
