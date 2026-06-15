@@ -694,11 +694,13 @@
   function openDemoModal() {
     overlay.hidden = false;
     document.body.style.overflow = 'hidden';
+    if (lenis) lenis.stop();
     overlay.querySelector('input:not([type=hidden]):not([style])').focus();
   }
   function closeDemoModal() {
     overlay.hidden = true;
     document.body.style.overflow = '';
+    if (lenis) lenis.start();
   }
 
   document.querySelectorAll('[data-demo]').forEach((el) => {
