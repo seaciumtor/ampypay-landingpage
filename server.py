@@ -129,15 +129,40 @@ def notify_admin(name, company, email, phone, job_title='', employees=''):
         ('Employees', employees or '-'),
     ]
     rows_html = ''.join(
-        f'<tr><td style="padding:8px 12px;{"background:#f9fafb;" if i%2==0 else ""}font-weight:600">{k}</td>'
-        f'<td style="padding:8px 12px">{v}</td></tr>'
-        for i, (k, v) in enumerate(rows)
+        f'<tr>'
+        f'<td style="padding:6px 16px 6px 0;font-size:14px;color:#6b7280;white-space:nowrap">{k}</td>'
+        f'<td style="padding:6px 0;font-size:14px;color:#111827;font-weight:500">{v}</td>'
+        f'</tr>'
+        for k, v in rows
     )
-    html = f"""
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
-      <h2 style="color:#111">New Demo Request</h2>
-      <table style="border-collapse:collapse;width:100%">{rows_html}</table>
-    </div>"""
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Demo Request</title>
+</head>
+<body style="margin:0;padding:0;background:#ffffff">
+  <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#0A1F44">
+    <div style="background:#0A1F44;padding:24px;text-align:center">
+      <img src="https://www.ampypay.com/assets/logos/logo.svg" alt="AmpyPay" width="140" style="display:inline-block;height:auto;max-width:140px">
+    </div>
+    <div style="padding:32px 24px">
+      <h2 style="margin:0 0 16px;font-size:18px">New Demo Request</h2>
+      <table style="border-collapse:collapse;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb;width:100%">
+        <tr><td style="padding:20px 24px">
+          <table cellpadding="0" cellspacing="0">{rows_html}</table>
+        </td></tr>
+      </table>
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
+      <p style="font-size:13px;color:#6b7280">This is an automated notification from AmpyPay.</p>
+    </div>
+    <div style="background:#FBFBEE;padding:16px 24px;text-align:center;font-size:12px;color:#0A1F44">
+      © 2026 AmpyPay · This email was sent because you requested a demo.
+    </div>
+  </div>
+</body>
+</html>"""
     threading.Thread(
         target=send_email,
         args=(NOTIFY_EMAIL, f'[AmpyPay] New demo request — {name} ({company})', html),
