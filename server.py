@@ -93,7 +93,8 @@ def send_email(to, subject, html):
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['From']    = SMTP_USER
-    msg['To']      = to
+    recipients = [t.strip() for t in to.split(',') if t.strip()]
+    msg['To']      = ', '.join(recipients)
     msg.attach(MIMEText(html, 'html', 'utf-8'))
     try:
         if SMTP_SECURE:
@@ -106,7 +107,7 @@ def send_email(to, subject, html):
                 pass
         if SMTP_USER and SMTP_PASS:
             s.login(SMTP_USER, SMTP_PASS)
-        s.sendmail(SMTP_USER, [to], msg.as_bytes())
+        s.sendmail(SMTP_USER, recipients, msg.as_bytes())
         s.quit()
     except Exception as e:
         print(f'[email error] {e}')

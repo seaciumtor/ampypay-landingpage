@@ -683,7 +683,7 @@
      DEMO MODAL
      ============================================================ */
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const DEMO_API = isLocal ? 'http://localhost:3001/api/demo' : 'https://ampypay-landingpage.onrender.com/api/demo';
+  const DEMO_API = isLocal ? 'http://localhost:3001/api/demo' : '/api/demo';
 
   const overlay   = document.getElementById('demoOverlay');
   const demoForm  = document.getElementById('demoForm');
