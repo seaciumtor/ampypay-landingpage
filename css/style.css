@@ -317,7 +317,7 @@ body::after {
 .hero-title {
   font-size: clamp(2.7rem, 6vw, 5.4rem);
   font-weight: 800;
-  line-height: 1.02;
+  line-height: 1.2;
   letter-spacing: -0.035em;
   color: var(--cream);
   margin-bottom: 28px;
@@ -346,7 +346,7 @@ body::after {
 }
 /* Desktop: oversize the product shot for impact; right edge clips at the viewport */
 @media (min-width: 961px) {
-  .hero-shot { width: 130%; max-width: none; margin-left: -100px; }
+  .hero-shot { width: 130%; max-width: none; margin-left: -75px; }
 }
 .ai-tag {
   font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
@@ -388,9 +388,9 @@ body::after {
   white-space: nowrap;
 }
 .float-chip em { font-style: normal; color: rgba(251, 251, 238, 0.6); }
-.chip-blockers { top: 154px; right: -72px; }
-.chip-ai { bottom: calc(18% + 80px); left: -122px; }
-.chip-filed { bottom: 26px; right: calc(14% + 30px); color: #9DC0FF; }
+.chip-blockers { top: 154px; right: -97px; }
+.chip-ai { bottom: calc(18% + 80px); left: -97px; }
+.chip-filed { bottom: 26px; right: calc(14% + 5px); color: #9DC0FF; }
 .chip-check { width: 16px; height: 16px; color: var(--blue); }
 .spark { color: var(--purple); }
 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
@@ -964,8 +964,13 @@ body::after {
   .hero { padding-bottom: 72px; }
   .hero-grid { grid-template-columns: 1fr; gap: 72px; }
   .hero-visual { max-width: 560px; margin-inline: auto; width: 100%; }
-  .chip-ai { left: -8px; }
-  .chip-blockers { right: -4px; }
+  /* Chips mirror the desktop layout proportionally: upper-right edge /
+     mid-left edge / bottom-right. Zones are vertically disjoint by >8px
+     even with the ±12px idle-float drift, and hug the bezel edges so the
+     core dashboard UI stays clear. */
+  .chip-blockers { top: 28%; right: 2%; }
+  .chip-ai { bottom: 33%; left: -3%; }
+  .chip-filed { bottom: 2%; right: 24%; }
   .scroll-hint { display: none; }
 
   .why-grid { grid-template-columns: 1fr; gap: 48px; }
@@ -999,7 +1004,6 @@ body::after {
   .conf-badge { left: 8px; bottom: -14px; padding: 10px 14px 10px 10px; gap: 10px; }
   .conf-badge .ring-sm, .conf-badge .ring-sm svg { width: 56px; height: 56px; }
   .conf-badge .ring-num { font-size: 0.85rem; }
-  .chip-ai { bottom: 8%; }
   .sec-stats { grid-template-columns: 1fr; }
   .sec-stat { border-right: none; border-bottom: 1px solid var(--line-light); }
   .sec-stat:last-child { border-bottom: none; }
@@ -1015,9 +1019,6 @@ body::after {
   .hero-ctas .btn { padding: 12px 20px; font-size: 0.88rem; }
   .hero-visual { max-width: min(100%, 42svh); }
   .float-chip { font-size: 0.68rem; padding: 8px 12px; }
-  .chip-blockers { top: 10%; }
-  .chip-ai { left: 0; }
-  .chip-filed { bottom: 8px; }
 }
 
 @media (max-width: 380px) {
