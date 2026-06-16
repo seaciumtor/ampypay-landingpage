@@ -21,6 +21,7 @@ import smtplib
 import sqlite3
 import threading
 import urllib.parse
+import urllib.request
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -42,6 +43,40 @@ SMTP_PASS    = _env('SMTP_PASS', '')
 NOTIFY_EMAIL = _env('NOTIFY_EMAIL', 'admin@eunite.com')
 ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
 DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
+TURNSTILE_SECRET = _env('TURNSTILE_SECRET', '')
+
+# ── Cloudflare Turnstile ────────────────────────────────────────────────────────
+TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
+
+def verify_turnstile(token, ip):
+    """Validate a Turnstile token with Cloudflare's siteverify API.
+
+    Fail-open when the secret is unset (local dev / not yet configured) and on
+    network errors reaching Cloudflare, so a CF outage never blocks real leads.
+    Fail-closed only on an explicit success=false from Cloudflare.
+    """
+    if not TURNSTILE_SECRET:
+        return True
+    if not token:
+        print('[turnstile] blocked: no token submitted', flush=True)
+        return False
+    data = urllib.parse.urlencode({
+        'secret':   TURNSTILE_SECRET,
+        'response': token,
+        'remoteip': (ip or '').split(',')[0].strip(),
+    }).encode()
+    try:
+        req = urllib.request.Request(TURNSTILE_VERIFY_URL, data=data, method='POST')
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read().decode())
+        if not result.get('success'):
+            print('[turnstile] blocked: success=false error-codes=%s'
+                  % (result.get('error-codes') or []), flush=True)
+            return False
+        return True
+    except Exception as e:
+        print('[turnstile] verify unreachable, failing open: %r' % e, flush=True)
+        return True  # network error reaching Cloudflare → don't block the user
 
 # ── Database ──────────────────────────────────────────────────────────────────
 _db_lock = threading.Lock()
@@ -347,6 +382,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         job_title = (body.get('job_title') or '').strip()
         employees = (body.get('employees') or '').strip()
         hp        = body.get('_hp', '')
+        captcha   = body.get('cf_turnstile_response', '')
 
         if hp:
             self._json(200, {'ok': True})
@@ -357,11 +393,16 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
             self._json(400, {'error': 'Invalid email address.'})
             return
+
+        ip = self.headers.get('X-Forwarded-For', self.client_address[0])
+        if not verify_turnstile(captcha, ip):
+            self._json(403, {'error': 'Verification failed. Please try again.'})
+            return
+
         if recent_count_by_email(email) >= 3:
             self._json(429, {'error': 'This email already has a pending request. We will be in touch.'})
             return
 
-        ip = self.headers.get('X-Forwarded-For', self.client_address[0])
         insert_submission(name, company, email, phone, ip, job_title, employees)
         notify_admin(name, company, email, phone, job_title, employees)
         confirm_customer(name, company, email)
@@ -386,6 +427,7 @@ if __name__ == '__main__':
         NOTIFY_EMAIL = _env('NOTIFY_EMAIL', 'admin@eunite.com')
         ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
         DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
+        TURNSTILE_SECRET = _env('TURNSTILE_SECRET', '')
 
     init_db()
     server = ThreadingHTTPServer(('0.0.0.0', PORT), Handler)

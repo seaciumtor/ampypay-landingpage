@@ -19,10 +19,12 @@
   <meta property="og:description" content="AI-assisted payroll operations built for accuracy, efficiency and confidence." />
   <link rel="icon" type="image/svg+xml" href="assets/logos/icon-1.svg" />
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=14" />
+  <link rel="stylesheet" href="css/style.css?v=15" />
+  <!-- Cloudflare Turnstile (invisible) — explicit render via onload -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
 </head>
-<body data-version="15.06.2026-11:03">
-  <!-- version 15.06.2026-2:35 -->
+<body data-version="16.06.2026-10:00">
+  <!-- version 16.06.2026-10:00 -->
   <!-- Demo request modal -->
   <div class="demo-overlay" id="demoOverlay" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" hidden>
     <div class="demo-modal">
@@ -78,6 +80,8 @@
           </div>
         </div>
         <p class="demo-privacy-note">By submitting this form, you acknowledge that you have read and agree to our Privacy Policy.</p>
+        <!-- Cloudflare Turnstile (invisible) — token injected here, rendered by js/main.js -->
+        <div id="turnstileWidget"></div>
         <span class="field-error" id="errGlobal"></span>
         <button type="submit" class="btn btn-primary demo-submit" id="demoSubmit">Request a demo</button>
       </form>
@@ -556,9 +560,9 @@
     </div>
   </footer>
 
-  <script src="js/vendor/gsap.min.js?v=14" defer></script>
-  <script src="js/vendor/ScrollTrigger.min.js?v=14" defer></script>
-  <script src="js/vendor/lenis.min.js?v=14" defer></script>
-  <script src="js/main.js?v=14" defer></script>
+  <script src="js/vendor/gsap.min.js?v=15" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js?v=15" defer></script>
+  <script src="js/vendor/lenis.min.js?v=15" defer></script>
+  <script src="js/main.js?v=15" defer></script>
 </body>
 </html>

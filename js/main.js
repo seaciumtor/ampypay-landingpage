@@ -695,6 +695,48 @@
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const DEMO_API = isLocal ? 'http://localhost:3001/api/demo' : '/api/demo';
 
+  // ── Cloudflare Turnstile (invisible) ──────────────────────────────────────
+  const TURNSTILE_SITEKEY = '0x4AAAAAADlv9AXnuhf6dJ0i';
+  let turnstileWidgetId = null;
+  let turnstileResolve  = null;
+
+  // Renders the widget. The "invisible" appearance comes from the widget mode
+  // configured in the Cloudflare dashboard; execution:'execute' + appearance:
+  // 'execute' keep it from running until we call execute() at submit time.
+  window.onTurnstileLoad = function () {
+    const container = document.getElementById('turnstileWidget');
+    if (!container || !window.turnstile || turnstileWidgetId !== null) return;
+    turnstileWidgetId = window.turnstile.render(container, {
+      sitekey: TURNSTILE_SITEKEY,
+      execution: 'execute',
+      appearance: 'execute',
+      callback: (token) => { if (turnstileResolve) { turnstileResolve(token); turnstileResolve = null; } },
+      'error-callback':   () => { if (turnstileResolve) { turnstileResolve(''); turnstileResolve = null; } },
+      'expired-callback': () => { if (turnstileResolve) { turnstileResolve(''); turnstileResolve = null; } },
+    });
+  };
+
+  // api.js (async) can finish loading BEFORE this deferred script defines the
+  // callback above — e.g. on a repeat visit when api.js is served from cache.
+  // In that case its onload fired into the void, so render now ourselves.
+  if (window.turnstile && window.turnstile.render) window.onTurnstileLoad();
+
+  // Resolve a fresh single-use token. Resolves '' if Turnstile is unavailable
+  // or times out so submission still degrades gracefully (server may fail-open).
+  function getTurnstileToken() {
+    return new Promise((resolve) => {
+      if (!window.turnstile || turnstileWidgetId === null) { resolve(''); return; }
+      let done = false;
+      const finish = (t) => { if (!done) { done = true; turnstileResolve = null; resolve(t); } };
+      turnstileResolve = finish;
+      setTimeout(() => finish(''), 8000);
+      try {
+        window.turnstile.reset(turnstileWidgetId);
+        window.turnstile.execute(turnstileWidgetId);
+      } catch (_) { finish(''); }
+    });
+  }
+
   const overlay   = document.getElementById('demoOverlay');
   const demoForm  = document.getElementById('demoForm');
   const demoClose = document.getElementById('demoClose');
@@ -810,7 +852,8 @@
     demoSubmit.disabled = true;
     demoSubmit.textContent = 'Sending…';
 
-    const payload = JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp });
+    const captchaToken = await getTurnstileToken();
+    const payload = JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp, cf_turnstile_response: captchaToken });
     try {
       let res, data;
       for (let attempt = 0; attempt <= 2; attempt++) {

@@ -22,3 +22,5 @@ services:
         sync: false
       - key: ADMIN_TOKEN
         sync: false
+      - key: TURNSTILE_SECRET
+        sync: false
