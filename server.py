@@ -327,7 +327,7 @@ def serve_static(handler, path):
         handler._error_page(400, '400.html', '<h2>400 Bad Request</h2>')
         return
     if not os.path.isfile(file_path):
-        handler._html(404, '<h2>404 Not Found</h2>')
+        handler._error_page(404, '404.html', '<h2>404 Not Found</h2>')
         return
     mime, _ = mimetypes.guess_type(file_path)
     mime = mime or 'application/octet-stream'

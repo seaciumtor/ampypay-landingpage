@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#071737" />
+  <meta name="robots" content="noindex" />
+  <title>Page not found — AmpyPay</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logos/icon-1.svg" />
+  <style>
+    /* Self-contained: no external CSS/fonts/JS so this renders even when the rest of the site is down. */
+    :root{
+      --navy:#0A1F44; --deep:#071737; --accent:#2563EA; --eyebrow:#6E96F5;
+      --cream:#FBFBEE; --orange:#f97316; --text2:rgba(251,251,238,.62);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+      color:var(--cream);
+      background:
+        radial-gradient(900px 600px at 80% -10%, rgba(37,99,234,.28), transparent 60%),
+        radial-gradient(700px 500px at 10% 110%, rgba(249,115,22,.12), transparent 55%),
+        linear-gradient(160deg,var(--deep),var(--navy));
+      min-height:100svh; display:flex; align-items:center; justify-content:center;
+      padding:32px; text-align:center; -webkit-font-smoothing:antialiased;
+    }
+    .wrap{max-width:540px; width:100%}
+    .code{
+      font-size:clamp(72px,18vw,140px); font-weight:800; line-height:.9;
+      letter-spacing:-.04em; font-variant-numeric:tabular-nums;
+      background:linear-gradient(180deg,#fff,var(--eyebrow));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:8px; margin-bottom:20px;
+      font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+      color:var(--eyebrow);
+    }
+    .eyebrow .line{width:24px; height:1px; background:var(--eyebrow); opacity:.6}
+    h1{font-size:clamp(22px,5vw,30px); font-weight:700; letter-spacing:-.02em; margin:18px 0 12px}
+    p{color:var(--text2); font-size:16px; line-height:1.6; margin:0 auto 28px; max-width:420px}
+    @media (prefers-reduced-motion: reduce){*{transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="eyebrow"><span class="line"></span>Error 404</p>
+    <div class="code" aria-hidden="true">404</div>
+    <h1>We couldn't find that page</h1>
+    <p>The page you're looking for may have moved or no longer exists. Check the address, or head back to start fresh.</p>
+  </main>
+</body>
+</html>
