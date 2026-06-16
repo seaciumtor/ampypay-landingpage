@@ -871,8 +871,9 @@
     emailInput.addEventListener('input', clearEmailSuggestion);
   }
 
-  // E.164: leading "+", country code (1-9), then digits — 8 to 15 total.
-  const PHONE_E164 = /^\+[1-9]\d{7,14}$/;
+  // Optional leading "+" then 7-15 digits. Country code NOT required — this is
+  // just enough to reject junk like "aaaa"/"123" while accepting global formats.
+  const PHONE_RE = /^\+?\d{7,15}$/;
   // Strip common formatting (spaces, dashes, parens, dots) and treat a leading
   // "00" international dialling prefix as "+", so global numbers normalise cleanly.
   function normalizePhone(v) {
@@ -911,8 +912,8 @@
     }
     if (!phoneRaw) {
       setError('errPhone', 'Required'); document.getElementById('demoPhone').classList.add('is-error'); valid = false;
-    } else if (!PHONE_E164.test(phone)) {
-      setError('errPhone', 'Include your country code, e.g. +66 81 234 5678');
+    } else if (!PHONE_RE.test(phone)) {
+      setError('errPhone', 'Enter a valid phone number');
       document.getElementById('demoPhone').classList.add('is-error'); valid = false;
     }
     if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }

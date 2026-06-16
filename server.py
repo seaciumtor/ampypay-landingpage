@@ -45,8 +45,10 @@ ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
 DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 TURNSTILE_SECRET = _env('TURNSTILE_SECRET', '')
 
-# ── Phone validation (E.164) ────────────────────────────────────────────────────
-PHONE_RE = re.compile(r'^\+[1-9]\d{7,14}$')
+# ── Phone validation ────────────────────────────────────────────────────────────
+# Optional leading "+" then 7-15 digits. Country code is not required; this just
+# rejects junk while accepting global formats.
+PHONE_RE = re.compile(r'^\+?\d{7,15}$')
 
 def normalize_phone(v):
     """Strip formatting and treat a leading '00' IDD prefix as '+'."""
@@ -404,7 +406,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self._json(400, {'error': 'Invalid email address.'})
             return
         if not PHONE_RE.match(phone):
-            self._json(400, {'error': 'Enter a valid phone number with country code, e.g. +66811234567.'})
+            self._json(400, {'error': 'Enter a valid phone number.'})
             return
 
         ip = self.headers.get('X-Forwarded-For', self.client_address[0])
