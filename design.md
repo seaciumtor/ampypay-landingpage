@@ -185,7 +185,41 @@ Full-screen navy with dual counter-rotating spinner rings, pulsing blue core, 0�
 
 ---
 
-## 7. Accessibility
+## 7. Ornamentation & Decoration Philosophy
+
+Why the page carries WebGL scenes, glows, grain, and a custom cursor at all — and the rules that keep them from becoming noise. The Three.js scenes themselves are specified in §6; this section is the *reasoning* behind shipping them.
+
+**Guiding test**: every decoration has to earn its place by *meaning* something. Payroll is global and security-critical, so the ornamentation argues exactly that — never decoration for its own sake.
+
+### The decision — why decorate a payroll site
+
+- **The brief**: enterprise payroll reads as dry and risky. The page has to feel like serious, modern infrastructure — credible enough to hand your payroll to — without tipping into playful fintech.
+- **The bet**: restrained, purposeful motion signals engineering quality. The globe says "global, redundant infrastructure"; the particle field says "live, computational." The ornamentation *is* the argument, made visually.
+- **The limit**: one accent color, one typeface, two WebGL moments. Anything that doesn't carry meaning — or that costs the fundamentals (load, a11y, readability) — gets cut. Flourish is the exception, not the default.
+
+### Guardrails
+
+| Rule | What it means |
+|---|---|
+| Earns its place | If a decoration doesn't communicate something true about the product, it doesn't ship. Two Three.js scenes, not ten. |
+| Never blocks content | Page is fully readable with zero JS. Three.js **lazy-loads after the hero image** to protect LCP; scenes attach only once `hasThree` is confirmed. |
+| Costs nothing to read | All canvases, glows, grain, and the custom cursor are `aria-hidden` — invisible to assistive tech, carrying no meaning that isn't also in text. |
+| Respects the user | `prefers-reduced-motion` stops globe auto-rotation and wave motion; off-screen scenes pause via IntersectionObserver to save battery/CPU. |
+| Degrades to nothing | No WebGL, no GSAP, slow device — content, layout, and color system stand alone. Ornamentation is purely additive. |
+| Stays vendored | GSAP, ScrollTrigger, Lenis, Three.js are local copies in `js/vendor/` — no CDNs, no third-party requests for decoration. |
+
+### Lighter ornamentation — the supporting cast
+
+- **Radial glows**: blue `rgba(37,99,234,…)` `blur(48px)` gradients behind layered screenshots — implies depth and light without a literal source.
+- **Film grain**: a single tiled SVG noise overlay at ~4% opacity warms the flat navy so it doesn't read as digital-cold.
+- **Glassmorphic chips**: backdrop-blur callouts that anchor real product claims onto the imagery — decoration that *labels*.
+- **Custom cursor**: ring + dot pair, fine-pointer only. A small signal of craft; never required to operate anything.
+
+> The `design.html` reference page deliberately applies none of this — system fonts, no WebGL, no grain — so it documents the ornamentation without imitating it.
+
+---
+
+## 8. Accessibility
 
 - Semantic landmarks (`header`, `main`, `section`, `nav`, `footer`); single `h1`; anchor-linked section IDs.
 - `aria-label` on icon-only controls (burger, close, scroll hint); `aria-expanded`/`aria-hidden` kept in sync on menu toggle; modal uses `role="dialog"` + `aria-modal` + `aria-labelledby`, focuses its first input, closes on Escape/backdrop.
@@ -195,7 +229,7 @@ Full-screen navy with dual counter-rotating spinner rings, pulsing blue core, 0�
 
 ---
 
-## 8. Voice & Copy Patterns
+## 9. Voice & Copy Patterns
 
 - Headlines are claims, not labels: *"Built for payroll — not adapted to it"*, *"Know your payroll is ready — before you submit"*.
 - Eyebrows name the capability area (*"Exception-first Operations"*, *"Compliance Infrastructure"*).
@@ -206,7 +240,7 @@ Full-screen navy with dual counter-rotating spinner rings, pulsing blue core, 0�
 
 ---
 
-## 9. File Map
+## 10. File Map
 
 ```
 index.html          all markup (single page)
