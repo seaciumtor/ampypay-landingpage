@@ -871,6 +871,16 @@
     emailInput.addEventListener('input', clearEmailSuggestion);
   }
 
+  // E.164: leading "+", country code (1-9), then digits — 8 to 15 total.
+  const PHONE_E164 = /^\+[1-9]\d{7,14}$/;
+  // Strip common formatting (spaces, dashes, parens, dots) and treat a leading
+  // "00" international dialling prefix as "+", so global numbers normalise cleanly.
+  function normalizePhone(v) {
+    let s = (v || '').replace(/[\s().-]/g, '');
+    if (s.startsWith('00')) s = '+' + s.slice(2);
+    return s;
+  }
+
   function setError(id, msg) {
     const el = document.getElementById(id);
     if (el) el.textContent = msg;
@@ -885,7 +895,8 @@
     clearErrors();
 
     const email     = document.getElementById('demoEmail').value.trim();
-    const phone     = document.getElementById('demoPhone').value.trim();
+    const phoneRaw  = document.getElementById('demoPhone').value.trim();
+    const phone     = normalizePhone(phoneRaw);
     const name      = document.getElementById('demoName').value.trim();
     const jobTitle  = document.getElementById('demoJobTitle').value.trim();
     const company   = document.getElementById('demoCompany').value.trim();
@@ -898,7 +909,12 @@
       document.getElementById('demoEmail').classList.add('is-error');
       valid = false;
     }
-    if (!phone) { setError('errPhone', 'Required'); document.getElementById('demoPhone').classList.add('is-error'); valid = false; }
+    if (!phoneRaw) {
+      setError('errPhone', 'Required'); document.getElementById('demoPhone').classList.add('is-error'); valid = false;
+    } else if (!PHONE_E164.test(phone)) {
+      setError('errPhone', 'Include your country code, e.g. +66 81 234 5678');
+      document.getElementById('demoPhone').classList.add('is-error'); valid = false;
+    }
     if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }
     if (!company) { setError('errCompany', 'Required'); document.getElementById('demoCompany').classList.add('is-error'); valid = false; }
     if (!valid) return;

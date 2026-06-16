@@ -45,6 +45,16 @@ ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
 DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 TURNSTILE_SECRET = _env('TURNSTILE_SECRET', '')
 
+# ── Phone validation (E.164) ────────────────────────────────────────────────────
+PHONE_RE = re.compile(r'^\+[1-9]\d{7,14}$')
+
+def normalize_phone(v):
+    """Strip formatting and treat a leading '00' IDD prefix as '+'."""
+    s = re.sub(r'[\s().\-]', '', v or '')
+    if s.startswith('00'):
+        s = '+' + s[2:]
+    return s
+
 # ── Cloudflare Turnstile ────────────────────────────────────────────────────────
 TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 
@@ -378,7 +388,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         name      = (body.get('name') or '').strip()
         company   = (body.get('company') or '').strip()
         email     = (body.get('email') or '').strip()
-        phone     = (body.get('phone') or '').strip()
+        phone     = normalize_phone(body.get('phone') or '')
         job_title = (body.get('job_title') or '').strip()
         employees = (body.get('employees') or '').strip()
         hp        = body.get('_hp', '')
@@ -392,6 +402,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
         if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
             self._json(400, {'error': 'Invalid email address.'})
+            return
+        if not PHONE_RE.match(phone):
+            self._json(400, {'error': 'Enter a valid phone number with country code, e.g. +66811234567.'})
             return
 
         ip = self.headers.get('X-Forwarded-For', self.client_address[0])
