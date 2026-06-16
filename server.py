@@ -45,6 +45,22 @@ ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
 DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
 TURNSTILE_SECRET = _env('TURNSTILE_SECRET', '')
 
+# ── Name validation ───────────────────────────────────────────────────────────
+# Precision-first: accept any script but reject links, HTML brackets, all-symbol
+# input, and gibberish (5+ identical chars in a row).
+NAME_BAD_RE    = re.compile(r'https?://|www\.|[<>]', re.IGNORECASE)
+NAME_REPEAT_RE = re.compile(r'(.)\1{4,}')
+
+def valid_name(v):
+    s = (v or '').strip()
+    if not (2 <= len(s) <= 100):
+        return False
+    if not any(ch.isalpha() for ch in s):       # must contain a letter (Unicode-aware)
+        return False
+    if NAME_BAD_RE.search(s) or NAME_REPEAT_RE.search(s):
+        return False
+    return True
+
 # ── Phone validation ────────────────────────────────────────────────────────────
 # Optional leading "+" then 7-15 digits. Country code is not required; this just
 # rejects junk while accepting global formats.
@@ -401,6 +417,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
         if not name or not company or not email:
             self._json(400, {'error': 'Name, company and email are required.'})
+            return
+        if not valid_name(name):
+            self._json(400, {'error': 'Please enter a valid name.'})
             return
         if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
             self._json(400, {'error': 'Invalid email address.'})

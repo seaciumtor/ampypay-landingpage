@@ -882,6 +882,17 @@
     return s;
   }
 
+  // Precision-first name check: accept any script (Latin, Thai, CJK, …) but
+  // reject obvious junk — links, HTML brackets, all-symbol, and gibberish.
+  function isValidName(v) {
+    const s = (v || '').trim();
+    if (s.length < 2 || s.length > 100) return false;     // length bounds
+    if (!/\p{L}/u.test(s)) return false;                  // must contain a letter
+    if (/https?:\/\/|www\.|[<>]/i.test(s)) return false;  // links / injection
+    if (/(.)\1{4,}/u.test(s)) return false;               // 5+ identical chars in a row
+    return true;
+  }
+
   function setError(id, msg) {
     const el = document.getElementById(id);
     if (el) el.textContent = msg;
@@ -916,7 +927,11 @@
       setError('errPhone', 'Enter a valid phone number');
       document.getElementById('demoPhone').classList.add('is-error'); valid = false;
     }
-    if (!name)    { setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false; }
+    if (!name) {
+      setError('errName', 'Required'); document.getElementById('demoName').classList.add('is-error'); valid = false;
+    } else if (!isValidName(name)) {
+      setError('errName', 'Enter a valid name'); document.getElementById('demoName').classList.add('is-error'); valid = false;
+    }
     if (!company) { setError('errCompany', 'Required'); document.getElementById('demoCompany').classList.add('is-error'); valid = false; }
     if (!valid) return;
 
