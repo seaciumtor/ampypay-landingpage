@@ -953,7 +953,7 @@
       if (!res.ok) {
         setError('errGlobal', data.error || 'Something went wrong. Please try again.');
         demoSubmit.disabled = false;
-        demoSubmit.textContent = 'Request a demo';
+        demoSubmit.textContent = 'Get a demo';
         return;
       }
       demoForm.hidden = true;
