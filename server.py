@@ -324,7 +324,7 @@ def serve_static(handler, path):
     file_path = os.path.join(BASE_DIR, path.lstrip('/'))
     # prevent directory traversal
     if not os.path.abspath(file_path).startswith(BASE_DIR):
-        handler._json(403, {'error': 'Forbidden'})
+        handler._error_page(400, '400.html', '<h2>400 Bad Request</h2>')
         return
     if not os.path.isfile(file_path):
         handler._html(404, '<h2>404 Not Found</h2>')
@@ -366,12 +366,28 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _error_page(self, code, filename, fallback):
+        """Serve a self-contained HTML error page from disk, falling back to inline markup."""
+        page = os.path.join(BASE_DIR, filename)
+        try:
+            with open(page, 'r', encoding='utf-8') as f:
+                self._html(code, f.read())
+        except Exception:
+            self._html(code, fallback)
+
     def do_OPTIONS(self):
         self.send_response(204)
         self._cors()
         self.end_headers()
 
     def do_GET(self):
+        try:
+            self._route_get()
+        except Exception as e:
+            print(f'[500] {e}')
+            self._error_page(500, '500.html', '<h2>500 — Something went wrong</h2>')
+
+    def _route_get(self):
         parsed = urllib.parse.urlparse(self.path)
         qs     = urllib.parse.parse_qs(parsed.query)
         token  = qs.get('token', [''])[0]
