@@ -992,6 +992,16 @@ body::before {
 .field-error { font-size: 0.78rem; color: #f87171; min-height: 1em; }
 .field-error:empty { display: none; }
 
+.field-suggest { display: block; font-size: 0.78rem; color: rgba(251,251,238,0.55); margin-top: 4px; }
+.field-suggest:empty { display: none; }
+.field-suggest-btn {
+  background: none; border: none; padding: 0; margin: 0 1px;
+  font: inherit; color: #6E96F5; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.field-suggest-btn:hover { color: #2563EA; }
+.field-suggest-btn:focus-visible { outline: 2px solid #2563EA; outline-offset: 2px; border-radius: 3px; }
+
 .demo-submit {
   margin-top: 6px; width: 100%; justify-content: center;
   padding: 14px; font-size: 0.95rem;

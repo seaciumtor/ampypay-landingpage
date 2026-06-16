@@ -817,6 +817,60 @@
     }
   });
 
+  /* Email typo suggestion (offline, via vendored mailcheck.js).
+     Tuned for precision over recall: only well-known consumer providers are
+     suggested, and corporate/Thai (.co.th, .ac.th, .go.th…) domains are left
+     untouched. The second-level list is disabled — full-domain matching alone
+     avoids sift3's false positives on short corporate labels (e.g. gov→aol). */
+  const MAILCHECK_DOMAINS = [
+    'gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.th', 'hotmail.com',
+    'hotmail.co.th', 'outlook.com', 'live.com', 'msn.com', 'icloud.com',
+    'aol.com', 'protonmail.com',
+  ];
+  const MAILCHECK_TLDS = [
+    'com', 'net', 'org', 'edu', 'gov', 'io', 'co', 'biz', 'info', 'me',
+    'co.th', 'or.th', 'ac.th', 'go.th', 'in.th', 'net.th',
+    'com.au', 'co.uk', 'co.jp', 'com.sg', 'sg', 'hk', 'jp',
+  ];
+
+  const emailInput = document.getElementById('demoEmail');
+  const suggestEl  = document.getElementById('suggestEmail');
+
+  function clearEmailSuggestion() {
+    if (suggestEl) suggestEl.textContent = '';
+  }
+  function showEmailSuggestion() {
+    if (!window.Mailcheck || !suggestEl) return;
+    clearEmailSuggestion();
+    const email = emailInput.value.trim();
+    if (!email) return;
+    window.Mailcheck.run({
+      email,
+      domains: MAILCHECK_DOMAINS,
+      secondLevelDomains: [],
+      topLevelDomains: MAILCHECK_TLDS,
+      topLevelThreshold: 1,
+      suggested(suggestion) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'field-suggest-btn';
+        btn.textContent = suggestion.full;            // textContent → no markup injection
+        btn.addEventListener('click', () => {
+          emailInput.value = suggestion.full;
+          clearEmailSuggestion();
+          emailInput.focus();
+        });
+        suggestEl.append('Did you mean ', btn, '?');
+      },
+      empty: clearEmailSuggestion,
+    });
+  }
+
+  if (emailInput && suggestEl) {
+    emailInput.addEventListener('blur', showEmailSuggestion);
+    emailInput.addEventListener('input', clearEmailSuggestion);
+  }
+
   function setError(id, msg) {
     const el = document.getElementById(id);
     if (el) el.textContent = msg;
