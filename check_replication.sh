@@ -3,10 +3,10 @@
 # Polls a single URL until a new version appears, then prints how long it took.
 #
 # Usage:
-#   ./scripts/check_replication.sh <url> [interval_seconds]
+#   ./check_replication.sh <url> [interval_seconds]
 #
 # Example:
-#   ./scripts/check_replication.sh https://ampypay.com 15
+#   ./check_replication.sh https://ampypay.com 15
 #
 # Workflow:
 #   1. Read current version from the URL (before deploy) — this is the "old" version
