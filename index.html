@@ -15,11 +15,63 @@
   <meta name="theme-color" content="#071737" />
   <title>AmpyPay — Payroll Outsourcing, Reimagined.</title>
   <meta name="description" content="AmpyPay is an AI-assisted enterprise payroll operations platform. We handle payroll. You handle growth." />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta property="og:title" content="AmpyPay — Payroll Outsourcing, Reimagined." />
-  <meta property="og:description" content="AI-assisted payroll operations built for accuracy, efficiency and confidence." />
+  <meta property="og:description" content="AmpyPay is an AI-assisted enterprise payroll operations platform. We handle payroll. You handle growth." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.ampypay.com" />
+  <meta property="og:image" content="https://www.ampypay.com/assets/images/hero2.png" />
+  <meta property="og:image:width" content="2238" />
+  <meta property="og:image:height" content="1353" />
+  <meta property="og:site_name" content="AmpyPay" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AmpyPay — Payroll Outsourcing, Reimagined." />
+  <meta name="twitter:description" content="AmpyPay is an AI-assisted enterprise payroll operations platform. We handle payroll. You handle growth." />
+  <meta name="twitter:image" content="https://www.ampypay.com/assets/images/hero2.png" />
+  <link rel="canonical" href="https://www.ampypay.com" />
   <link rel="icon" type="image/svg+xml" href="assets/logos/icon-1.svg" />
+  <link rel="apple-touch-icon" href="assets/logos/icon-1.svg" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "AmpyPay",
+      "description": "AmpyPay is an AI-assisted enterprise payroll operations platform. We handle payroll. You handle growth.",
+      "url": "https://www.ampypay.com",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "eUnite HCM",
+        "url": "https://www.ampypay.com"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "AmpyPay",
+      "url": "https://www.ampypay.com",
+      "logo": "https://www.ampypay.com/assets/logos/logo.svg",
+      "description": "AmpyPay is an AI-assisted enterprise payroll operations platform. We handle payroll. You handle growth.",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "url": "https://www.ampypay.com/#cta"
+      },
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "eUnite HCM",
+        "url": "https://www.ampypay.com"
+      }
+    }
+  ]
+  </script>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="assets/images/hero1-corrected.webp?v=21" as="image" type="image/webp" />
+  <link rel="preload" href="assets/images/hero1-corrected-mobile.webp?v=21" as="image" type="image/webp" media="(max-width: 768px)" />
+  <link rel="preload" href="assets/images/hero1-corrected.webp?v=21" as="image" type="image/webp" media="(min-width: 769px)" />
   <link rel="stylesheet" href="css/style.css?v=21" />
 </head>
 <body data-version="16.06.2026-21:00">
@@ -163,6 +215,7 @@
 
         <div class="hero-visual" id="heroVisual">
             <picture>
+              <source srcset="assets/images/hero1-corrected-mobile.webp?v=21" type="image/webp" media="(max-width: 768px)" />
               <source srcset="assets/images/hero1-corrected.webp?v=21" type="image/webp" />
               <img class="hero-shot" id="mockPanel" src="assets/images/hero1-corrected.png?v=21"
                    alt="AmpyPay payroll operations dashboard on a tablet, showing the upcoming payroll run, confidence score and inbox"
@@ -413,9 +466,12 @@
                      alt="AmpyPay audit log of compliance-sensitive actions with viewable receipts"
                      width="1000" height="808" loading="lazy" />
               </picture>
-              <img class="comp-shot comp-shot--tax" src="assets/images/compliance-01.png?v=21"
-                   alt="AmpyPay dynamic Federal W-4 tax onboarding form"
-                   width="661" height="544" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/compliance-01.webp?v=21" type="image/webp" />
+                <img class="comp-shot comp-shot--tax" src="assets/images/compliance-01.png?v=21"
+                     alt="AmpyPay dynamic Federal W-4 tax onboarding form"
+                     width="661" height="544" loading="lazy" />
+              </picture>
               <picture>
                 <source srcset="assets/images/compliance03.webp?v=21" type="image/webp" />
                 <img class="comp-shot comp-shot--receipt" src="assets/images/compliance03.png?v=21"

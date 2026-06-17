@@ -122,7 +122,7 @@
     }
   }, 4000);
 
-  if (reduced || !hasGsap) {
+  if (reduced || !hasGsap || window.innerWidth < 961) {
     if (preloader) preloader.style.display = 'none';
   } else {
     const count = { v: 0 };
@@ -666,26 +666,28 @@
   }
   }
 
-  if (hasThree) {
-    initThreeJS();
-  } else {
-    const heroImg = document.getElementById('mockPanel');
-    function _loadThree() {
-      function _s(src, cb) {
-        const s = document.createElement('script');
-        s.src = src; s.onload = cb;
-        document.body.appendChild(s);
-      }
-      _s('js/vendor/three.min.js', () => _s('js/world-land.js', initThreeJS));
-    }
-    if (heroImg && heroImg.complete) {
-      // complete covers both loaded and already-failed — never strand three.js
-      _loadThree();
-    } else if (heroImg) {
-      heroImg.addEventListener('load', _loadThree, { once: true });
-      heroImg.addEventListener('error', _loadThree, { once: true });
+  if (finePointer && window.innerWidth >= 961) {
+    if (hasThree) {
+      initThreeJS();
     } else {
-      window.addEventListener('load', _loadThree, { once: true });
+      const heroImg = document.getElementById('mockPanel');
+      function _loadThree() {
+        function _s(src, cb) {
+          const s = document.createElement('script');
+          s.src = src; s.onload = cb;
+          document.body.appendChild(s);
+        }
+        _s('js/vendor/three.min.js', () => _s('js/world-land.js', initThreeJS));
+      }
+      if (heroImg && heroImg.complete) {
+        // complete covers both loaded and already-failed — never strand three.js
+        _loadThree();
+      } else if (heroImg) {
+        heroImg.addEventListener('load', _loadThree, { once: true });
+        heroImg.addEventListener('error', _loadThree, { once: true });
+      } else {
+        window.addEventListener('load', _loadThree, { once: true });
+      }
     }
   }
 
