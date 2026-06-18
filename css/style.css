@@ -24,6 +24,7 @@
 }
 
 :root {
+  --sat: env(safe-area-inset-top, 0px);
   --navy: #0A1F44;
   --navy-80: rgba(10, 31, 68, 0.8);
   --navy-deep: #071737;
@@ -45,7 +46,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; background: var(--navy-deep); }
 html.lenis { scroll-behavior: auto; height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto; }
 
@@ -55,7 +56,6 @@ body {
   color: var(--cream);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 ::selection { background: var(--blue); color: #fff; }
@@ -223,22 +223,9 @@ body::after {
 /* ============ Navigation ============ */
 .nav {
   position: fixed; top: 0; left: 0; right: 0;
-  z-index: 1000;
+  z-index: 8990;
   background: var(--navy-deep);
-  padding-top: env(safe-area-inset-top);
   transition: background 0.4s, box-shadow 0.4s, backdrop-filter 0.4s;
-}
-/* Always-solid bar covering the iOS status-bar / safe-area inset,
-   so page content never shows through above the header. Mounted on
-   <body> (not .nav) and given a z-index ABOVE the nav so it sits on
-   top of the scrolled nav's translucent + backdrop-filter layer. */
-body::before {
-  content: "";
-  position: fixed; top: 0; left: 0; right: 0;
-  height: env(safe-area-inset-top);
-  background: var(--navy-deep);
-  z-index: 1100;
-  pointer-events: none;
 }
 .nav.scrolled {
   background: rgba(10, 31, 68, 0.92);

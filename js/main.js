@@ -251,7 +251,11 @@
 
   /* ---------------- Nav state + mobile menu ---------------- */
   const nav = document.getElementById('nav');
-  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+  const onScroll = () => {
+    const s = window.scrollY > 24;
+    nav.classList.toggle('scrolled', s);
+    document.body.classList.toggle('nav-scrolled', s);
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
@@ -896,7 +900,9 @@
     demoSubmit.disabled = true;
     demoSubmit.textContent = 'Sending…';
 
-    const payload = JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp });
+    const _d = new Date(), _p = n => String(n).padStart(2,'0');
+    const clientTime = `${_d.getFullYear()}-${_p(_d.getMonth()+1)}-${_p(_d.getDate())} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())}`;
+    const payload = JSON.stringify({ name, company, email, phone, job_title: jobTitle, employees, _hp: hp, client_time: clientTime });
     try {
       let res, data;
       for (let attempt = 0; attempt <= 2; attempt++) {
