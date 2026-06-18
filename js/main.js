@@ -931,4 +931,16 @@
     }
   });
 
+  // Cookie consent banner
+  const cookieBanner       = document.getElementById('cookieBanner');
+  const cookieBannerAccept = document.getElementById('cookieBannerAccept');
+  const cookieBannerClose  = document.getElementById('cookieBannerClose');
+  if (!localStorage.getItem('cookieConsent')) cookieBanner.hidden = false;
+  cookieBannerAccept.addEventListener('click', () => {
+    localStorage.setItem('cookieConsent', '1');
+    cookieBanner.hidden = true;
+  });
+  cookieBannerClose.addEventListener('click', () => { cookieBanner.hidden = true; });
+
+
 })();
