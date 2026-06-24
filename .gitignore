@@ -6,3 +6,4 @@ backend/.env
 backend/*.db
 .env
 *.db
+db_config.py
