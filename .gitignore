@@ -6,3 +6,7 @@ backend/.env
 backend/*.db
 .env
 *.db
+testdb.html
+testdb.py
+__pycache__/
+*.pyc
