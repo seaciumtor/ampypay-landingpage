@@ -937,7 +937,7 @@ body::after {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
   background: #f8fafc; border: 1px solid rgba(10,31,68,0.16);
   border-radius: 10px; padding: 11px 14px;
-  color: var(--navy-deep); font-size: 0.9rem; font-family: inherit;
+  color: var(--navy-deep); font-size: 1rem; font-family: inherit;
   cursor: pointer; text-align: left;
   transition: border-color 0.2s, background 0.2s;
 }
@@ -1100,6 +1100,7 @@ body::after {
 
 @media (max-width: 768px) {
   .footer-bottom { flex-direction: column; gap: 20px; }
+  .demo-field input { font-size: 1rem; }
 }
 
 @media (max-width: 560px) {

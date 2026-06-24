@@ -6,4 +6,11 @@ backend/.env
 backend/*.db
 .env
 *.db
+<<<<<<< HEAD
 db_config.py
+=======
+testdb.html
+testdb.py
+__pycache__/
+*.pyc
+>>>>>>> da2597787144c6153bd8de4dcb30c8b7513fa66f
