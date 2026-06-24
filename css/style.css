@@ -1140,7 +1140,24 @@ body::after {
 
   .demo-overlay { padding: 0; }
   .demo-modal { border-radius: 0; border: 0; padding: 24px; min-height: 100%; }
-  .cookie-banner { left: 12px; right: 12px; bottom: 12px; max-width: none; border-radius: 16px; }
+}
+
+@media (max-width: 560px) {
+  .demo-overlay {
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+    overflow-y: hidden;
+    align-items: stretch;
+    background: #ffffff;
+    backdrop-filter: none;
+  }
+  .demo-modal {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+    min-height: unset;
+  }
 }
 
 @media (max-width: 380px) {
