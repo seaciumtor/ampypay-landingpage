@@ -113,8 +113,10 @@ def mysql_insert_submission(name, company, email, phone, ip, job_title='', emplo
              VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
     with get_mysql() as conn:
         with conn.cursor() as cur:
+            from datetime import datetime, timezone
+            ts = client_time or datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
             cur.execute(sql, (name, company, email, phone or None, job_title or None,
-                               employees or None, ip or None, client_time or None, country or None))
+                               employees or None, ip or None, ts, country or None))
 
 def mysql_get_all_submissions():
     with get_mysql() as conn:
@@ -888,7 +890,8 @@ if __name__ == '__main__':
         SMTP_PASS    = _env('SMTP_PASS', '')
         NOTIFY_EMAIL = _env('NOTIFY_EMAIL', 'admin@eunite.com')
         ADMIN_TOKEN  = _env('ADMIN_TOKEN', 'changeme')
-        DB_PATH      = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
+        _db = _env('DB_PATH', os.path.join(BASE_DIR, 'demo_submissions.db'))
+        DB_PATH      = _db if os.path.isabs(_db) else os.path.join(BASE_DIR, _db)
 
     init_db()
     server = ThreadingHTTPServer(('0.0.0.0', PORT), Handler)
